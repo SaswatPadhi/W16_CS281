@@ -11,20 +11,15 @@
 
 \usepackage{cancel}
 
-\newcommand{\namedset}[1]
-           {\ensuremath{\mathbb{#1}}}
-\newcommand{\collection}[1]
-           {\ensuremath{\mathcal{#1}}}
-\newcommand{\namedcollection}[1]
-           {\ensuremath{\textnormal{\textsc{#1}}}}
-\newcommand{\machine}[1]
-           {\ensuremath{\textnormal{\textsf{#1}}}}
-\newcommand{\family}[1]
-           {\ensuremath{\textnormal{\textsf{\textbf{#1}}}}}
+\newcommand {\namedset}[1]     {\ensuremath{\mathbb{#1}}}
+\newcommand {\langset}[1]      {\ensuremath{\mathcal{#1}}}
+\newcommand {\namedlangset}[1] {\ensuremath{\textnormal{\textsc{#1}}}}
+\newcommand {\machine}[1]      {\ensuremath{\textnormal{\textsf{#1}}}}
+\newcommand {\family}[1]       {\ensuremath{\textnormal{\textsf{\textbf{#1}}}}}
 
-\newcommand{\term}[1]{\textsf{#1}}
-\newcommand{\namethm}[1]{\term{#1} Theorem}
-\newcommand{\usingthm}[1]{(Using \namethm{#1})}
+\newcommand {\term}[1]      {\textsf{#1}}
+\newcommand {\namethm}[1]   {\term{#1} Theorem}
+\newcommand {\usingthm}[1]  {(Using \namethm{#1})}
 
 \newenvironment{turing}[2]{
   \par\smallskip\leftskip=2em
@@ -41,7 +36,9 @@
   \par\medskip
 }
 
-\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\small\sffamily def}}}{=\joinrel=}}}
+\newcommand\defeq{\mathrel{\overset
+  {\makebox[0pt]{\mbox{\normalfont\small\sffamily def}}}
+  {=\joinrel=}}}
 
 \newcommand{\todo}[1]{{\large \textbf{TODO: #1}}}
 
@@ -52,86 +49,119 @@
             {Time Hierarchy \& Oracle Machines}
 
 \noindent
-In the last lecture, we discussed two important theorems which
-collapsed two classes Turing machines based on running time -- one involving
-constant factors, and the other involving exponentials! We
-showed that there are Turing machines which are arbitrarily
-slower (or faster) by any constant factor; than a given Turing
-machine, but are still able to decide the same language. And
-for some specific Turing machines, even exponential speedup or
-slowdown was shown to be possible.
+In the last lecture, we discussed two important theorems which collapsed two
+classes Turing machines based on running time -- one involving constant factors,
+and the other involving exponentials! We showed that there are Turing machines
+which are arbitrarily slower (or faster) by any constant factor; than a given
+Turing machine, but are still able to decide the same language. And for some
+specific Turing machines, even exponential speedup or slowdown was shown to be
+possible.
 
-In this lecture, we discuss the next natural question; whether
-given more time, any Turing machines would at all become more
-powerful -- be able to decide more languages? As we show later,
-that is indeed the case (at least for most practical purposes)!
-And this property of Turing machines defines a hierarchy among
-them. Beyond allowing more running time, we also discuss some
-properties of Turing machines upon equipping them with powerful
-decision units, called \term{Oracles}. We conclude with some
-interesting insights into the nature of \family{P} and \family{NP}
-relative to oracles.
+In this lecture, we discuss the next natural question; whether given more time,
+any Turing machines would at all become more powerful -- be able to decide more
+languages? As we show later, that is indeed the case (at least for most
+practical purposes)! And this property of Turing machines defines a hierarchy
+among them. Beyond allowing more running time, we also discuss some properties
+of Turing machines upon equipping them with powerful decision units, called
+\term{Oracles}. We conclude with some interesting insights into the nature of
+\family{P} and \family{NP} relative to oracles.
 
 \section{Time Constructibility}
 
-Before delving into the question of whether Turing machines grow powerful when allowed to run longer; we first observe that we need some additional restrictions on the upper-bound till which we allow our Turing machines to run.
+Before delving into the question of whether Turing machines grow powerful when
+allowed to run longer; we first observe that we need some additional
+restrictions on the upper-bound till which we allow our Turing machines to run.
 
-Let us consider two time functions defined on the input size $n$, which govern the time till which we allow the Turing machines to run:
+Let us consider two time functions defined on the input size $n$, which govern
+the time till which we allow the Turing machines to run:
 $$ T: \namedset{N} \to \namedset{N} \quad\textnormal{and}\quad
    t: \namedset{N} \to \namedset{N} \qquad\textnormal{such that}\quad
    \exists n_0: \forall n > n_0: T(n) \geq t(n)$$
 
 \noindent
-In other words, $T(n)$ at least as large as $t(n)$ excluding some (finite number of) inputs of size at most $n_0$. Because a finite number of inputs
-can always be preprocessed and `saved' in a Turing machine, we only consider the behaviour beyond these inputs. With this assumption of $T$ and $t$, we want to check:
+In other words, $T(n)$ at least as large as $t(n)$ excluding some (finite number
+of) inputs of size at most $n_0$. Because a finite number of inputs can always
+be preprocessed and `saved' in a Turing machine, we only consider the behaviour
+beyond these inputs. With this assumption of $T$ and $t$, we want to check:
 
 \begin{center}
-Is there a language \collection{L} that is decidable by some Turing machine which is allowed to run till time $T(n)$; but not by any Turing machines allowed to run till time $t(n)$?
+Is there a language \langset{L} that is decidable by some Turing machine which
+is allowed to run till time $T(n)$; but not by any Turing machines allowed to
+run till time $t(n)$?
 \end{center}
 
 \noindent
- Using the theorems we discussed in the previous lecture, we require the following restrictions on $T$ and $t$:
+ Using the theorems we discussed in the previous lecture, we require the
+ following restrictions on $T$ and $t$:
 
 \begin{enumerate}
-  \item $ \lim_{n \to \infty} \frac{T(n)}{t(n)} = \infty $ \hfill \usingthm{Linear Speedup}
+  \item $ \lim_{n \to \infty} \frac{T(n)}{t(n)} = \infty $ \hfill
+    \usingthm{Linear Speedup}
   \item $T(n)$ must have some other restrictions \hfill \usingthm{Gap}
 \end{enumerate}
 
 \noindent
-The first restriction is easy to see. Intuitively, $T(n)$ and $t(n)$ should have a super-linear relationship; otherwise the \namethm{Linear Speedup} dictates that they decide the same set of languages.
+The first restriction is easy to see. Intuitively, $T(n)$ and $t(n)$ should have
+a super-linear relationship; otherwise the \namethm{Linear Speedup} dictates
+that they decide the same set of languages.
 
-The second restriction is necessary, because the \namethm{Gap} asserts the existence of specially crafted time functions which do not allow Turing machines to decide any more languages, even when arbitrarily sped up or slowed down. Clearly, Turing machines with such time complexity, do not become more powerful when allowed to run longer. But we still have to analyze the case for other \textit{well behaved} time functions.  \\
+The second restriction is necessary, because the \namethm{Gap} asserts the
+existence of specially crafted time functions which do not allow Turing machines
+to decide any more languages, even when arbitrarily sped up or slowed down.
+Clearly, Turing machines with such time complexity, do not become more powerful
+when allowed to run longer. But we still have to analyze the case for other
+\textit{well behaved} time functions.  \\
 
 \noindent
-Recall the way we constructed a special function (call it $G(n)$) which satisfies \namethm{Gap}, using diagonalization. By construction, no Turing machine was able to halt in time $G(n)$, over all inputs $n$.\\
-Thus, our \textit{well behaved} time function $T(n)$ should be such that some Turing machine would halt in $T(n)$ steps for all inputs $n$.
+Recall the way we constructed a special function (call it $G(n)$) which
+satisfies \namethm{Gap}, using diagonalization. By construction, a $G(n)$-time
+Turing machine was also a $2^{G(n)}$-time Turing machine. \\
+Specifically, the \textit{running time} for such Turing machines was not a
+single fixed function over the input size. We would like our
+\textit{well behaved} Turing machines to always halt in some fixed function
+$T(n)$ defined over the input size $n$.
 
 \begin{remark}
-If there is some Turing machine which halts in $T(n)$ steps for all inputs $n$, then using it we can build a Turing machine which `computes' $T(n)$ in $O(T(n))$ time.
+If there is some Turing machine which halts in $T(n)$ steps for all inputs $n$,
+then using it we can build a Turing machine which `computes' $T(n)$ in $O(T(n))$
+time.
 \end{remark}
 
 \noindent
-We call such functions $T(n)$ as \term{time constructible}, and formally define this notion as:
+We call such functions $T(n)$ as \term{time constructible}, and formally define
+this notion as:
 
 \begin{definition}[Time Constructible Functions]
-A function $T: \namedset{N} \to \namedset{N}$ such that $T(n) \geq n$, for all $n$; is called time constructible, if $T(n)$ is computable in $O(T(n))$ i.e. there is some Turing machine \machine{M} which can map $n \mapsto T(n)$ for all inputs $n$, within time $O(T(n))$.
+A function $T: \namedset{N} \to \namedset{N}$ such that $T(n) \geq n$, for all
+$n$; is called time constructible, if $T(n)$ is computable in $O(T(n))$ i.e.
+there is some Turing machine \machine{M} which can map $n \mapsto T(n)$ for all
+inputs $n$, within time $O(T(n))$.
 \end{definition}
 
 \noindent
-Fortunately, most functions of practical interest; for example $42n$, $n^{1.23}$, $\sqrt[k]{n}$ etc. are all \term{time constructible}. In fact it is quite hard to craft a computable function which is not \term{time constructible}, as we did using diagonalization in last lecture.
+Fortunately, most functions of practical interest; for example
+$42n$, $n^{1.23}$, $\sqrt[k]{n}$ etc. are all \term{time constructible}. In fact
+it is quite hard to craft a computable function which is not
+\term{time constructible}, as we did using diagonalization in last lecture.
 
 
 \section{Time Hierarchy}
 
-Having figured out the additional restriction on $T(n)$, required due to \namethm{Gap}, we are finally able to answer whether Turing machines run in times measurable by \term{time constructible} function grow more powerful when allowed to run longer. \\
-As we prove below, indeed they do! Even a small logarithmic factor of relaxation in running time allows the Turing machines to decide more languages.
+Having figured out the additional restriction on $T(n)$, required due to
+\namethm{Gap}, we are finally able to answer whether Turing machines run in
+times measurable by \term{time constructible} function grow more powerful when
+allowed to run longer. \\
+As we prove below, indeed they do! Even a small logarithmic factor of relaxation
+in running time allows the Turing machines to decide more languages.
 
 \begin{theorem}[\textit{Deterministic} Time Hierarchy Theorem \cite{HS65}]
 \label{dtime_hierarchy_theorem}
-Let $T: \namedset{N} \to \namedset{N}$ and $t: \namedset{N} \to \namedset{N}$ be two \term{time constructible} functions, such that:
+Let $T: \namedset{N} \to \namedset{N}$ and $t: \namedset{N} \to \namedset{N}$ be
+two \term{time constructible} functions, such that:
 $$
 \lim_{n \to \infty} \frac{t(n) \log{t(n)}}{T(n)} = 0
-\qquad \textnormal{then,} \qquad \family{DTIME}(t(n)) \subsetneq \family{DTIME}(T(n))
+\qquad \textnormal{then,}
+\qquad \family{DTIME}(t(n)) \subsetneq \family{DTIME}(T(n))
 $$
 \end{theorem}
 
@@ -143,23 +173,44 @@ $$
 \begin{tabular}{|l||c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
   \textbf{\machine{M}} \textbackslash~$x$
-              &  0 &  1 & 00 & 01 & 10 & 11 & \ldots & $x_i$ & $x_{i+1}$ & \ldots & $x_j$ & \ldots \\\hline\hline
-  $\machine{M}_{0}$ \hfill $\star$ & \cancel{0}~\textbf{1} &  1 & -- &  1 &  0 & 0 & \ldots & -- & 0 & \ldots & 1 & \ldots \\\hline
-  $\machine{M}_{1}$ &  0 & -- &  1 & -- &  1 & -- & \ldots & 1 & 1 & \ldots & 1 & \ldots \\\hline
-  $\machine{M}_{00}$ \hfill $\star$ & -- &  0 & \cancel{1}~\textbf{0} &  1 & -- & 1 & \ldots & 0 & 0 & \ldots & 0 & \ldots \\\hline
-  $\machine{M}_{01}$ \hfill $\star$ &  1 & 0 & -- & \cancel{1}~\textbf{0} & 0 & -- & \ldots & 1 & -- & \ldots & -- & \ldots \\\hline
-  \ldots & \ldots &  \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\\hline
-  $\machine{M}_{i}$ \hfill $\star$ &  1 &  0 & -- &  1 &  1 & 0 & \ldots & -- & 1 & \ldots & -- & \ldots \\\hline
-  $\machine{M}_{i+1}$ & -- &  1 & -- &  1 &  0 & -- & \ldots & 1 & 0 & \ldots & -- & \ldots \\\hline
-  \ldots & \ldots &  \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\\hline
-  $\machine{M}_{j}$ \hfill $\star$ &  0 & -- & -- &  1 & -- & 0 & \ldots & 1 & -- & \ldots & \cancel{0}~\textbf{1} & \ldots \\\hline
-  \ldots & \ldots &  \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\\hline
+    & 0 & 1 & 00 & 01 & 10 & 11 & \ldots & $x_i$ & $x_{i+1}$ & \ldots & $x_j$
+    & \ldots \\\hline\hline
+
+  $\machine{M}_{0}$ \hfill $\star$ & \cancel{0}~\textbf{1} & 1 & -- & 1 & 0 & 0
+    & \ldots & -- & 0 & \ldots & 1 & \ldots \\\hline
+  $\machine{M}_{1}$ & 0 & -- & 1 & -- & 1 & -- & \ldots & 1 & 1 & \ldots & 1
+    & \ldots \\\hline
+  $\machine{M}_{00}$ \hfill $\star$ & -- & 0 & \cancel{1}~\textbf{0} & 1 & --
+    & 1 & \ldots & 0 & 0 & \ldots & 0 & \ldots \\\hline
+  $\machine{M}_{01}$ \hfill $\star$ & 1 & 0 & -- & \cancel{1}~\textbf{0} & 0
+    & -- & \ldots & 1 & -- & \ldots & -- & \ldots \\\hline
+  \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots
+    & \ldots & \ldots & \ldots & \ldots \\\hline
+  $\machine{M}_{i}$ \hfill $\star$ & 1 & 0 & -- & 1 & 1 & 0 & \ldots & -- & 1
+    & \ldots & -- & \ldots \\\hline
+  $\machine{M}_{i+1}$ & -- & 1 & -- & 1 & 0 & -- & \ldots & 1 & 0 & \ldots & --
+    & \ldots \\\hline
+  \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots
+    & \ldots & \ldots & \ldots & \ldots \\\hline
+  $\machine{M}_{j}$ \hfill $\star$ & 0 & -- & -- & 1 & -- & 0 & \ldots & 1 & --
+    & \ldots & \cancel{0}~\textbf{1} & \ldots \\\hline
+  \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots
+    & \ldots & \ldots & \ldots & \ldots \\\hline
 \end{tabular}
-\caption{An example of diagonalization for theorem \ref{dtime_hierarchy_theorem}. Diagonal elements have been flipped for all machines in \family{DTIME}(t(n)) (marked with $\star$). Cells $\left<\machine{M}_\alpha, x_\beta \right>$ marked with ``--'' indicate that the machine $\machine{M}_\alpha$ on input $x_\beta$ did not halt within time $O(t(|x_\beta|))$.}
+\caption{An example of diagonalization for theorem
+  \ref{dtime_hierarchy_theorem}. Diagonal elements have been flipped for all
+  machines in \family{DTIME}(t(n)) (marked with $\star$).
+  Cells $\left<\machine{M}_\alpha, x_\beta \right>$ marked with ``--'' indicate
+  that the machine $\machine{M}_\alpha$ on input $x_\beta$ did not halt within
+  time $O(t(|x_\beta|))$.}
 \label{diag_table:dtime_hierarchy}
 \end{figure}
 
-We prove this theorem by diagonalization. Consider all Turing recognizable languages. The diagonalization step is to flip the diagonal entries of only those rows which correspond to machines in \family{DTIME}(t(n)), to create a language \collection{L} which is guaranteed not to be computable by any Turing machine in \family{DTIME}(t(n)). \\
+We prove this theorem by diagonalization. Consider all Turing recognizable
+languages. The diagonalization step is to flip the diagonal entries of only 
+those rows which correspond to machines in \family{DTIME}(t(n)), to create a
+language \langset{L} which is guaranteed not to be computable by any Turing
+machine in \family{DTIME}(t(n)). \\
 The following Turing machine can be constructed to realize this diagonalization:
 
 \begin{turing}{\machine{D}}{$x$}
@@ -168,95 +219,155 @@ The following Turing machine can be constructed to realize this diagonalization:
 \end{turing}
 
 \noindent
-\machine{D} sets an \textit{alarm} for $T(|x|)$ time units, and stops simulating $\machine{M}_x(x)$ as soon as the alarm rings. Note that, the construction of Turing machine \machine{D} relies on the function $T(n)$ being \term{time constructible}. Otherwise, the running time of \machine{D} may not be $O(T(|x|))$. But with a \term{time constructible} $T(n)$; by construction, $\machine{D} \in \family{DTIME}(T(n))$. \\
+\machine{D} sets an \textit{alarm} for $T(|x|)$ time units, and stops simulating
+$\machine{M}_x(x)$ as soon as the alarm rings. Note that, the construction of
+Turing machine \machine{D} relies on the function $T(n)$ being \term{time
+constructible}. Otherwise, the running time of \machine{D} may not be
+$O(T(|x|))$. But with a \term{time constructible} $T(n)$; by construction,
+$\machine{D} \in \family{DTIME}(T(n))$. \\
 
 \noindent
 Now we would show that $\machine{D} \not\in \family{DTIME}(t(n))$.\\
-Consider any Turing machine $\machine{M}_\alpha \in \family{DTIME}(t(n))$ which runs in $c \cdot t(n)$ time. Using a simulation similar to universal Turing machine \machine{U}, we can simulate $\machine{M}_\alpha$ with input $x$ in time, at most $t'(|x|) = c \cdot t(|x|) \cdot \log(c \cdot t(|x|))$. Now as per our assumption $\lim_{n \to \infty} \frac{t(n) \log{t(n)}}{T(n)} = 0$; we have $t'(|x|) < T(|x|)$, for large enough inputs.
+Consider any Turing machine $\machine{M}_\alpha \in \family{DTIME}(t(n))$ which
+runs in $c \cdot t(n)$ time. Using a simulation similar to universal Turing
+machine \machine{U}, we can simulate $\machine{M}_\alpha$ with input $x$ in
+time, at most $t'(|x|) = c \cdot t(|x|) \cdot \log(c \cdot t(|x|))$. Now as per
+our assumption $\lim_{n \to \infty} \frac{t(n) \log{t(n)}}{T(n)} = 0$; we have
+$t'(|x|) < T(|x|)$, for large enough inputs.
 
 \noindent
-Consider input $x_0 = 0^{n_\alpha} \alpha$, which is just another representation of $\machine{M}_\alpha$ created by padding with leading $0$s which would be ignored. The number $n_\alpha$ is such that,
+Consider input $x_0 = 0^{n_\alpha} \alpha$, which is just another representation
+of $\machine{M}_\alpha$ created by padding with leading $0$s which would be
+ignored. The number $n_\alpha$ is such that,
 $$ \forall n > n_\alpha: T(n) > t'(n) $$
 Thus, $t'(|0^{n_\alpha} \alpha|)< T(|0^{n_\alpha} \alpha|)$. \\
-With this time bound, \machine{D} ensures $\machine{D}(x_0) \neq \machine{M}_{x_0}(x_0)$ by construction. But $\machine{M}_{x_0}(x_0) = \machine{M}_\alpha (x_0)$. \\
+With this time bound, \machine{D} ensures
+$\machine{D}(x_0) \neq \machine{M}_{x_0}(x_0)$
+by construction. But $\machine{M}_{x_0}(x_0) = \machine{M}_\alpha (x_0)$. \\
 
 \noindent
-Hence, for any $\machine{M}_\alpha \in \family{DTIME}(t(n))$; we have $\collection{L}(D) \neq \collection{L}(\machine{M}_\alpha)$ i.e. $\machine{D} \not\in \family{DTIME}(t(n))$.
+Hence, for any $\machine{M}_\alpha \in \family{DTIME}(t(n))$; we have
+$\langset{L}(D) \neq \langset{L}(\machine{M}_\alpha)$
+i.e. $\machine{D} \not\in \family{DTIME}(t(n))$.
 \end{proof}
 
 
 \section{Oracle Machines}
 
-Oracle machine is a variant of a Turing machine which is equipped with a powerful black-box, called an \term{Oracle}. An oracle can be arbitrarily powerful -- able to solve all kinds of decision problems \textit{instantly}! An Oracle \collection{O} is some encoding of a language of some decision problem: $\collection{O} \subseteq \{0,1\}^*$, and it answers membership queries on this set. Clearly, oracles can be a huge boost for Turing machines. In this section, we explore if these mighty oracles can provide us some more insight on the nature of \family{P} and \family{NP}.
+Oracle machine is a variant of a Turing machine which is equipped with a
+powerful black-box, called an \term{Oracle}. An oracle can be arbitrarily
+powerful -- able to solve all kinds of decision problems \textit{instantly}! An
+Oracle \langset{O} is some encoding of a language of some decision problem:
+$\langset{O} \subseteq \{0,1\}^*$, and it answers membership queries on this
+set. Clearly, oracles can be a huge boost for Turing machines. In this section,
+we explore if these mighty oracles can provide us some more insight into the
+nature of \family{P} and \family{NP}.
 
 \begin{definition}[Oracle Machine]
-An Oracle Turing machine (or simply Oracle machine), $\machine{M}^\collection{O}$ is a Turing machine \machine{M} equipped with an oracle $\collection{O} \subseteq \{0,1\}^*$. The Turing machine \machine{M} in addition to its usual properties, has the following additional ones:
+An Oracle Turing machine (or simply Oracle machine), $\machine{M}^\langset{O}$
+is a Turing machine \machine{M} equipped with an oracle
+$\langset{O} \subseteq \{0,1\}^*$. The Turing machine \machine{M} in addition to
+its usual properties, has the following additional ones:
 \begin{itemize}
-    \item has a special tape with the \collection{O} language.
+    \item has a special tape with the \langset{O} language.
     \item can write any string $x \in \{0,1\}^*$ on the special tape
-    \item can go into a special \texttt{query} state to consult oracle \collection{O}
-    \item instantly receives answer on the special tape: $1$ if $x$ in $\collection{O}$ else $0$.
+    \item can go into special \texttt{query} state to consult oracle \langset{O}
+    \item instantly receives answer on the special tape:
+      $1$ if $x$ in $\langset{O}$ else $0$.
 \end{itemize}
-Note that a \texttt{query} to \collection{O} counts as a single computational step, regardless of the choice of \collection{O}.
+Note that a \texttt{query} to \langset{O} counts as a single computational step,
+regardless of the choice of \langset{O}.
 \end{definition}
 
 \noindent
 We can similarly extend the definition to complexity classes:
 
-\begin{definition} Let \collection{O} be an oracle, then the relativized complexity classes $\family{P}^\collection{O}$ and $\family{NP}^\collection{O}$ are:
+\begin{definition} Let \langset{O} be an oracle, then the relativized complexity
+classes $\family{P}^\langset{O}$ and $\family{NP}^\langset{O}$ are:
   \begin{flalign*}
-    \qquad \family{P}^\collection{O} &\defeq \{ \collection{L}(\machine{M}^\collection{O}) : \collection{L}(\machine{M}) \in \family{P} \} &\\
-    &\defeq \{\collection{L} : \collection{L} \textnormal{ is decidable by a deterministic poly-time Turing machine with oracle \collection{O}}\} & \\
-    \qquad \family{NP}^\collection{O} &\defeq \{ \collection{L}(\machine{M}^\collection{O}) : \collection{L}(\machine{M}) \in \family{NP} \} & \\
-    &\defeq \{\collection{L} : \collection{L} \textnormal{ is decidable by a non-deterministic poly-time Turing machine with oracle \collection{O}}\}
+    \qquad \family{P}^\langset{O}
+      &\defeq \{ \langset{L}(\machine{M}^\langset{O})
+        : \langset{L}(\machine{M}) \in \family{P} \} &\\
+      &\defeq \{\langset{L} : \langset{L} \textnormal{ is decidable by a
+        deterministic poly-time Turing machine with oracle \langset{O}}\} & \\
+    \qquad \family{NP}^\langset{O}
+      &\defeq \{ \langset{L}(\machine{M}^\langset{O})
+        : \langset{L}(\machine{M}) \in \family{NP} \} & \\
+      &\defeq \{\langset{L} : \langset{L} \textnormal{ is decidable by a
+        non-deterministic poly-time Turing machine with oracle \langset{O}}\}
   \end{flalign*}
 \end{definition}
 
 \noindent
-The following statement demonstrates how Turing machines become greatly powerful when equipped with an oracle.
+The following statement demonstrates how Turing machines become greatly powerful
+when equipped with an oracle.
 
 \begin{proposition}
 \label{NP_in_PSAT_proposition}
-The class $\family{P}^\namedcollection{SAT}$ contains \family{NP} i.e. $\family{NP} \subseteq \family{P}^\namedcollection{SAT}$.
+The class $\family{P}^\namedlangset{SAT}$ contains \family{NP} i.e.
+$\family{NP} \subseteq \family{P}^\namedlangset{SAT}$.
 \end{proposition}
 
 \begin{proof}
-We know from the \namethm{Cook-Levin} that $\namedcollection{SAT} \in \family{NP-C}$. So,
-$$\forall \collection{D} \in \family{NP} : \namedcollection{SAT} \preceq_p \collection{D} \quad i.e. \quad x \in \collection{D} \Longleftrightarrow p_\collection{D}^\namedcollection{SAT}(x) \in \namedcollection{SAT}$$
-where $\preceq_p$ denotes polynomial time reduction and $p_\collection{D}^\namedcollection{SAT}$ is a polynomial time transformation function, which transforms an instance of \collection{D} to an instance of \namedcollection{SAT}. \\
+We know from \namethm{Cook-Levin} that $\namedlangset{SAT} \in \family{NP-C}$.
+So, $$\forall \langset{D} \in \family{NP}
+  : \namedlangset{SAT} \preceq_p \langset{D} \quad
+  i.e. \quad x \in \langset{D} \Longleftrightarrow
+       p_\langset{D}^\namedlangset{SAT}(x) \in \namedlangset{SAT}$$
+where $\preceq_p$ denotes polynomial time reduction and
+$p_\langset{D}^\namedlangset{SAT}$ is a polynomial time transformation function,
+which transforms an instance of \langset{D} to an instance of
+\namedlangset{SAT}. \\
 
 \noindent
-Using this fact, for any decision problem $\collection{D} \in \family{NP}$, we can construct a polynomial Turing machine using the oracle \namedcollection{SAT} as:
-\begin{turing}{$\machine{M}^\namedcollection{SAT}_\collection{D}$}{$x$}
-  apply the polynomial time transformation $p_\collection{D}^\namedcollection{SAT}(x)$ resulting in $y$\\
-  \texttt{query} oracle \namedcollection{SAT} for $y$ \\
+Using this fact, for any decision problem $\langset{D} \in \family{NP}$, we can
+construct a polynomial Turing machine using the oracle \namedlangset{SAT} as:
+\begin{turing}{$\machine{M}^\namedlangset{SAT}_\langset{D}$}{$x$}
+  apply the polynomial time transformation $p_\langset{D}^\namedlangset{SAT}(x)$
+  resulting in $y$\\
+  \texttt{query} oracle \namedlangset{SAT} for $y$ \\
   return the result from the oracle
 \end{turing}
 
 \noindent
-Clearly, $\forall \collection{D} \in \family{NP} : \collection{L}(\machine{M}^\namedcollection{SAT}_\collection{D}) \in \family{P}^\namedcollection{SAT}$. \\
-And by construction, $\forall \collection{D} \in \family{NP} : \collection{L}(\machine{M}^\namedcollection{SAT}_\collection{D}) = \collection{D}$. \\
+Clearly, $\forall \langset{D} \in \family{NP}
+: \langset{L}(\machine{M}^\namedlangset{SAT}_\langset{D})
+  \in \family{P}^\namedlangset{SAT}$. \\
+And by construction, $\forall \langset{D} \in \family{NP}
+  : \langset{L}(\machine{M}^\namedlangset{SAT}_\langset{D}) = \langset{D}$. \\
 
 \noindent
-Thus, $\forall \collection{D} \in \family{NP} : \collection{D} \in \family{P}^\namedcollection{SAT}$, or equivalently $ \family{NP} \subseteq \family{P}^\namedcollection{SAT}$.
+Thus, $\forall \langset{D} \in \family{NP}
+  : \langset{D} \in \family{P}^\namedlangset{SAT}$, or equivalently
+$ \family{NP} \subseteq \family{P}^\namedlangset{SAT}$.
 \end{proof}
 
 \begin{definition}[Complement Complexity Classes]
-The complement complexity class \family{co-F} or a complexity class \family{F} is the set:
-$$ \family{co-F} = \{ \collection{L} : \overline{\collection{L}} \in \family{F} \} $$
-where $\overline{\collection{L}}$ is the usual set-complement of \collection{L} i.e. $\{0,1\}^* \setminus \collection{L}$.
+The complement complexity class \family{co-F} or a complexity class \family{F}
+is the set:
+$$ \family{co-F} = \{ \langset{L} : \overline{\langset{L}} \in \family{F} \} $$
+where $\overline{\langset{L}}$ is the usual set-complement of \langset{L}
+i.e. $\{0,1\}^* \setminus \langset{L}$.
 \end{definition}
 
 \begin{figure}[h]
 \centering
 \graphicspath{{include/fig_classes/}}
 \includegraphics[scale=2]{fig_classes.pdf}
-\caption{Relationship between complexity classes and their \family{co-}classes, within $\family{P}^\namedcollection{SAT}$. It is not known if $\family{P} =?\; \family{P}^\namedcollection{SAT}$. If it they are equal, the entire hierarchy collapses and we would have $\family{P} = \family{NP} = \family{co-NP} = \family{P}^\namedcollection{SAT}$. The only portion of the intersections known to be non-empty is \family{P}.}
+\caption{Relationship between complexity classes and their \family{co-}classes,
+within $\family{P}^\namedlangset{SAT}$. It is not known if
+$\family{P} =?\; \family{P}^\namedlangset{SAT}$. If it they are equal, the
+entire hierarchy collapses and we would have
+$\family{P} = \family{NP} = \family{co-NP} = \family{P}^\namedlangset{SAT}$. The
+only portion of the intersections known to be non-empty is \family{P}.}
 \label{classes_fig}
 \end{figure}
 
 \begin{remark}
-\family{co-F} is not the complement of \family{F} itself, but the set of complements of the languages contained by \family{F}. Thus, $\family{F} \,\cap\, \family{co-F}$ may be non-empty, as show in figure \ref{classes_fig} for \family{NP}.
+\family{co-F} is not the complement of \family{F} itself, but the set of
+complements of the languages contained by \family{F}. Thus,
+$\family{F} \,\cap\, \family{co-F}$ may be non-empty, as show in figure
+\ref{classes_fig} for \family{NP}.
 \end{remark}
 
 \begin{proposition}
@@ -264,8 +375,9 @@ $\family{P} = \family{co-P}$
 \end{proposition}
 
 \begin{proof}
-Consider any language $\collection{D} \in \family{P}$. \\
-By definition of the complexity class \family{P}, there exists a polynomial time deterministic Turing machine \machine{M} which \textit{decides} \collection{D}. \\
+Consider any language $\langset{D} \in \family{P}$. \\
+By definition of the complexity class \family{P}, there exists a polynomial time
+deterministic Turing machine \machine{M} which \textit{decides} \langset{D}. \\
 
 \noindent
 We define another polynomial time deterministic Turing machine as below:
@@ -277,78 +389,126 @@ We define another polynomial time deterministic Turing machine as below:
 \noindent
 Note that the simulation step cannot take longer than polynomial time, because:
 \begin{enumerate}
-  \item by definition of class \family{P}, the machine \machine{M} halts in polynomial time
-  \item the simulation overhead is at most logarithmic, as with a universal Turing machine
+  \item by definition of class \family{P},
+    the machine \machine{M} halts in polynomial time
+  \item the simulation overhead is at most logarithmic,
+    as with a universal Turing machine
 \end{enumerate}
 
 \noindent
-By construction, $\collection{L}(\overline{\machine{M}}) = \overline{\collection{L}(\machine{M})} = \overline{\collection{D}}$. \\
-Thus, we have a polynomial time deterministic Turing machine $\overline{\machine{M}}$ which decides $\overline{\collection{D}}$. \\
+By construction, $\langset{L}(\overline{\machine{M}})
+                 = \overline{\langset{L}(\machine{M})}
+                 = \overline{\langset{D}}$. \\
+Thus, we have a polynomial time deterministic Turing machine
+$\overline{\machine{M}}$ which decides $\overline{\langset{D}}$. \\
 
 \noindent
-Therefore, $\forall \collection{D} \in \family{P} : \overline{\collection{D}} \in \family{P}$. \\
-By definition, $\family{co-P} = \{\collection{D} : \overline{\collection{D}} \in \family{P} \} = \{\collection{D} : \collection{D} \in \family{P} \}$ Equivalently, $\family{co-P} = \family{P}$.
+Therefore, $\forall \langset{D} \in \family{P}
+  : \overline{\langset{D}} \in \family{P}$. \\
+By definition, $\family{co-P}
+  = \{\langset{D} : \overline{\langset{D}} \in \family{P} \}
+  = \{\langset{D} : \langset{D} \in \family{P} \}$.
+Equivalently, $\family{co-P} = \family{P}$.
 \end{proof}
 
 \begin{proposition}
-The class $\family{P}^\namedcollection{SAT}$ also contains \family{co-NP} i.e. $\family{co-NP} \subseteq \family{P}^\namedcollection{SAT}$.
+The class $\family{P}^\namedlangset{SAT}$ also contains \family{co-NP}
+i.e. $\family{co-NP} \subseteq \family{P}^\namedlangset{SAT}$.
 \end{proposition}
 
 \begin{proof}
-Consider any decision problem $\collection{D} \in \family{co-NP}$. By definition, $\overline{\collection{D}} \in \family{NP}$. \\
-As shown in the proof of proposition \ref{NP_in_PSAT_proposition}, there exists $p_{\overline{\collection{D}}}^\namedcollection{SAT}$ which is a polynomial time transformation function, which transforms an instance of $\overline{\collection{D}}$ to an instance of \namedcollection{SAT}. \\
+Consider any decision problem $\langset{D} \in \family{co-NP}$.
+By definition, $\overline{\langset{D}} \in \family{NP}$. \\
+As shown in the proof of proposition \ref{NP_in_PSAT_proposition},
+there exists $p_{\overline{\langset{D}}}^\namedlangset{SAT}$ which is
+a polynomial time transformation function from
+an instance of $\overline{\langset{D}}$ to an instance of \namedlangset{SAT}. \\
 
 \noindent
-Again similar to proof of proposition \ref{NP_in_PSAT_proposition}, we can construct a polynomial Turing machine using the oracle \namedcollection{SAT} as:
-\begin{turing}{$\machine{M}^\namedcollection{SAT}_{\overline{\collection{D}}}$}{$x$}
-  apply the polynomial time transformation $p_{\overline{\collection{D}}}^\namedcollection{SAT}(x)$ resulting in $y$\\
-  \texttt{query} oracle \namedcollection{SAT} for $y$ \\
+Again similar to proof of proposition \ref{NP_in_PSAT_proposition}, we can
+construct a polynomial Turing machine using the oracle \namedlangset{SAT} as:
+\begin{turing}{$\machine{M}^\namedlangset{SAT}_{\overline{\langset{D}}}$}{$x$}
+  apply the polynomial time transformation
+  $p_{\overline{\langset{D}}}^\namedlangset{SAT}(x)$ resulting in $y$\\
+  \texttt{query} oracle \namedlangset{SAT} for $y$ \\
   if the oracle returns $1$, return $0$ else return $1$
 \end{turing}
 
 \noindent
-Clearly, $\forall \collection{D} \in \family{co-NP} : \collection{L}(\machine{M}^\namedcollection{SAT}_{\overline{\collection{D}}}) \in \family{P}^\namedcollection{SAT}$. \\
-And by construction, $\forall \collection{D} \in \family{co-NP} : \collection{L}(\machine{M}^\namedcollection{SAT}_{\overline{\collection{D}}}) = \collection{D}$. \\
+Clearly, $\forall \langset{D} \in \family{co-NP}
+  : \langset{L}(\machine{M}^\namedlangset{SAT}_{\overline{\langset{D}}})
+    \in \family{P}^\namedlangset{SAT}$. \\
+And by construction, $\forall \langset{D} \in \family{co-NP}
+  : \langset{L}(\machine{M}^\namedlangset{SAT}_{\overline{\langset{D}}})
+= \langset{D}$. \\
 
 \noindent
-Thus, $\forall \collection{D} \in \family{co-NP} : \collection{D} \in \family{P}^\namedcollection{SAT}$, or equivalently $ \family{co-NP} \subseteq \family{P}^\namedcollection{SAT}$.
+Thus, $\forall \langset{D} \in \family{co-NP}
+  : \langset{D} \in \family{P}^\namedlangset{SAT}$,
+or equivalently $ \family{co-NP} \subseteq \family{P}^\namedlangset{SAT}$.
 \end{proof}
 
 \begin{theorem}[\cite{BGS75}]
-There exists an oracle $\collection{O} \subseteq \{0,1\}^*$ such that, $\family{P}^\collection{O} = \family{NP}^\collection{O}$
+There exists an oracle $\langset{O} \subseteq \{0,1\}^*$ such that,
+$\family{P}^\langset{O} = \family{NP}^\langset{O}$
 \end{theorem}
 
 \begin{proof}
 Consider the following oracle:
-$$ \collection{O} = \{ (\machine{M}, x, 1^k) : \machine{M} \textnormal{ halts on input } x \textnormal{ within } 2^{{|x|}^k} \textnormal{ steps with output } 1 \} $$
-Let \collection{E} be an arbitrary decision problem in \family{EXP}, and \machine{M} be a deterministic Turing machine which decides \collection{E} in $2^{{|x|}^m}$ steps on all inputs $x$. \\
-We can construct a polynomial time deterministic Turing machine $\machine{M}_\collection{E}$ which on any input $x$, invokes \collection{O} with $(\machine{M}, x, 1^m)$ and returns its result. Note that encoding the tuple only takes polynomial time ($\machine{M}$ and $1^m$ are constants independent of $|x|$).
-So, $\family{EXP} \subseteq \family{P}^\collection{O}$. \\
+$$ \langset{O} = \{ (\machine{M}, x, 1^k)
+  : \machine{M} \textnormal{ halts on input } x
+  \textnormal{ within } 2^{{|x|}^k} \textnormal{ steps with output } 1 \} $$
+Let \langset{E} be an arbitrary decision problem in \family{EXP}, and
+\machine{M} be a deterministic Turing machine which decides \langset{E} in
+$2^{{|x|}^m}$ steps on all inputs $x$. \\
+We can construct a polynomial time deterministic Turing machine
+$\machine{M}_\langset{E}$ which on any input $x$, invokes \langset{O} with
+$(\machine{M}, x, 1^m)$ and returns its result. Note that encoding the tuple
+only takes polynomial time ($\machine{M}$ and $1^m$ are constants independent of
+$|x|$). So, $\family{EXP} \subseteq \family{P}^\langset{O}$. \\
 
 \noindent
-It is trivially true that $\family{P}^\collection{O} \subseteq \family{NP}^\collection{O}$, because every deterministic Turing machine is also a non-deterministic Turing machine. \\
+It is trivially true that
+$\family{P}^\langset{O} \subseteq \family{NP}^\langset{O}$, because every
+deterministic Turing machine is also a non-deterministic Turing machine. \\
 
 \noindent
-Now consider any decision problem in $\family{NP}^\collection{O}$. In exponential time, we can brute-force the exponentially-many possible certificates (of polynomial length); and the polynomial number of calls to \collection{O}. Thus, $\family{NP}^\collection{O} \subseteq \family{EXP}$. \\
+Now consider any decision problem in $\family{NP}^\langset{O}$. In exponential
+time, we can brute-force the exponentially-many possible certificates
+(of polynomial length); and the polynomial number of calls to \langset{O}.
+Thus, $\family{NP}^\langset{O} \subseteq \family{EXP}$. \\
 
 \noindent
-Therefore $\family{EXP} \subseteq \family{P}^\collection{O} \subseteq \family{NP}^\collection{O} \subseteq \family{EXP}$; implying the equivalence of: $\family{P}^\collection{O}$, $\family{NP}^\collection{O}$ and $\family{EXP}$.
+Therefore $\family{EXP} \subseteq \family{P}^\langset{O}
+                        \subseteq \family{NP}^\langset{O}
+                        \subseteq \family{EXP}$; implying the equivalence of:
+$\family{P}^\langset{O}$, $\family{NP}^\langset{O}$ and $\family{EXP}$.
 \end{proof}
 
 \begin{theorem}[\cite{BGS75}]
-There exists an oracle $\collection{O} \subseteq \{0,1\}^*$ such that, $\family{P}^\collection{O} \neq \family{NP}^\collection{O}$
+There exists an oracle $\langset{O} \subseteq \{0,1\}^*$ such that,
+$\family{P}^\langset{O} \neq \family{NP}^\langset{O}$
 \end{theorem}
 
 \begin{proof}
-For an oracle \collection{O}, let us define $\collection{L}_\collection{O} = \{ 1^n : \collection{O} \cap \{0,1\}^n \} \neq \phi$. \\
-Clearly, $\collection{L}_\collection{O} \in \family{NP}^\collection{O}$. On any input $1^n$ to a non-deterministic Turing machine; we can guess a string $x \in \{0,1\}^n$ and accept it if \collection{O} accepts it. \\
+For an oracle \langset{O}, let us define
+$\langset{L}_\langset{O} = \{ 1^n : \langset{O} \cap \{0,1\}^n \} \neq \phi$. \\
+Clearly, $\langset{L}_\langset{O} \in \family{NP}^\langset{O}$.
+On any input $1^n$ to a non-deterministic Turing machine; we can guess a string
+$x \in \{0,1\}^n$ and accept it if \langset{O} accepts it. \\
 
 \noindent
-We construct the oracle \collection{O} such that $\collection{L}_\collection{O} \not\in \family{P}^\collection{O}$. \\
-We enumerate all polynomial time deterministic Turing machines: $\machine{M}_1, \machine{M}_2 \ldots \machine{M}_i \ldots$; where $\machine{M}_i$ runs in time $n^i$. Then construct \collection{O} in stages, $i \in \{1, 2, 3 \ldots\}$ and at each stage $i$, we:
+We construct the oracle \langset{O} such that
+$\langset{L}_\langset{O} \not\in \family{P}^\langset{O}$. \\
+We enumerate all polynomial time deterministic Turing machines:
+$\machine{M}_1, \machine{M}_2 \ldots \machine{M}_i \ldots$;
+where $\machine{M}_i$ runs in time $n^i$. Then construct \langset{O} in stages,
+$i \in \{1, 2, 3 \ldots\}$ and at each stage $i$, we:
 \begin{itemize}
-  \item declare status of a finite set of strings i.e. determine whether or not the string $\in$ \collection{O}
-  \item ensure $\collection{L}_\collection{O} \neq \collection{L}(\machine{M}_i^\collection{O})$ regardless of yet to be declared inputs
+  \item declare status of a finite set of strings
+    i.e. determine whether or not the string $\in$ \langset{O}
+  \item regardless of yet to be declared inputs ensure
+    $\langset{L}_\langset{O} \neq \langset{L}(\machine{M}_i^\langset{O})$ 
 \end{itemize}
 
 \noindent
@@ -357,20 +517,31 @@ Concretely, at each stage $i$ we do the following:
   \item pick an $n$ such that:
   \begin{itemize}
     \item $2^n > n^i$
-    \item $\forall x \in \{0, 1\}^n : x$ is undeclared in \collection{O} i.e. $n >$ length of any string declared in \collection{O}
+    \item $\forall x \in \{0, 1\}^n : x$ is undeclared in \langset{O}
+      i.e. $n >$ length of any string declared in \langset{O}
   \end{itemize}
   \item simulate $\machine{M}_i$ on $1^n$ such that:
   \begin{itemize}
-    \item if $\machine{M}_i$ queries a string declared in \collection{O}, we return the declared status in \collection{O}
-    \item if $\machine{M}_i$ queries the status of a string $x$ \textit{not} declared in \collection{O}, we declare that $x \not\in \collection{O}$
+    \item if $\machine{M}_i$ queries a string declared in \langset{O},
+      we return the declared status in \langset{O}
+    \item if $\machine{M}_i$ queries the status of a string $x$ \textit{not}
+      declared in \langset{O}, we declare that $x \not\in \langset{O}$
   \end{itemize}
-  \item finally, if $\machine{M}_i$: \hfill (ensure that $\machine{M}_i$ is always \textit{wrong})
+  \item finally, if $\machine{M}_i$:
+    \hfill (ensure that $\machine{M}_i$ is always \textit{wrong})
   \begin{itemize}
-    \item accepts $1^n$, declare that $\forall x \in \{0,1\}^n : x \not\in \collection{O}$. \hfill (consistent with existing strings)
-    \item rejects $1^n$, declare that $\exists x \in \{0,1\}^n : x \in \collection{O}$. \hfill (such an $x$ exists because $2^n > n^i$)
+    \item accepts $1^n$, declare that
+      $\forall x \in \{0,1\}^n : x \not\in \langset{O}$.
+      \hfill (consistent with existing strings)
+    \item rejects $1^n$, declare that
+      $\exists x \in \{0,1\}^n : x \in \langset{O}$.
+      \hfill (such an $x$ exists because $2^n > n^i$)
   \end{itemize}
 \end{enumerate}
-By construction, $\forall i : (\machine{M}_i$ does not accept $\collection{L}_\collection{O})$. Thus, $\collection{L}_\collection{O} \not\in \family{P}^\collection{O}$ implying $\family{P}^\collection{O} \neq \family{NP}^\collection{O}$.
+By construction,
+$\forall i : (\machine{M}_i$ does not accept $\langset{L}_\langset{O})$.
+Thus, $\langset{L}_\langset{O} \not\in \family{P}^\langset{O}$ implying
+$\family{P}^\langset{O} \neq \family{NP}^\langset{O}$.
 \end{proof}
 
 \bibliographystyle{abbrv}
