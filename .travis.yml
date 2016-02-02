@@ -1,20 +1,25 @@
+language: generic
+
 sudo: false
 
 addons:
   apt:
     packages:
-      - pgf
-      - texlive
+    - pgf
+    - texlive
 
 script:
-  - cd Lec7 && make all && cd ..
+- cd Lec7 && make all && cd ..
+
+notifications:
+  email: false
 
 deploy:
   provider: releases
   api_key:
-    secure: "jwBeKf6C44xtVcZ2s81M//iZeH4OJTfuMlD7JEvqkdh1e1XBpjOiTMgvu3oyPSP1OJUUk14Ot80KcNb99LPki1tdTsHU4qcg6/MrVIXDcKpuliNRfc4GcpNEORwe8seCU5cf7KXCX4ixnpXb5CFk7oOKMEczHlKaBzk+3Zo8CyDoP0G6qLk3RPrLkd3FqIQBloVNmPTaw7J5tOUGcmFXpOnOVLpKr3uZDeHN17+qz7+yOltjXsdBoS2R2sF88HLzztnkOFCo5l/KIYfuO2/NaTOYhAEvpwRgqAew9zoT8EPZrv0DFMwG8fm6uwVhFlaCmT6vQ9AEPgLLrlabqMKFCHxC7ul/sDUtT5ngt8Ez6rhtw86k++Xp4NgUnTHlEfK1szJejWGGBbPOFUofm3S2vUJFg81VmA5A4/L7wRomcr7Z5HkFIz0U3PC7+pqTmYmm6DdF+D+RN2XhObkb8qNo9duimUHasbt4k/R9p2iMdwwrtWzj18VxT/O5H5l2Kk8bni6udDtfwgi5Lz6f9bUPw3I+gs5mJjpI0ykFNhS/CY1UYhv+NZOD6bueOGlievx7DSd27F2CC5F6YlAcPm4PzI2TCtL4j2qm4/z7gMBFt7mmgWPlaK7f+Caia4bPA06xGkSsuCCa086PZ+onR+xUUUkqqghIW+qyCTmmnMQRYxI="
+    secure: qPtc2JICZvn0zy7lRb6muenl2cAs44ShzwBuwMXhG5m5nEgClhKEvFCH4PzYeVwct5l1OKHtE4AlQo1PvTC0Ujjg8AgU7TbbhU38AcLu1Gh6X2Uh8Ye2fkRc3ikTQXZwU0EF6jaDKWJiV4/rvS/VQ27LnsXQKyclC0cOeWU+Pll92RMMmIubDWUFDY45tYLeTg9CGmTIUgwvhkHbbOAWLe2RvUva9WOZNz32sPbnkEM/BvENsC8lnbyfynrSz/Z48XeMu0EdW8ACP+LT3FfT1+463eiPYtLCwrTv2gqutH6RNpu9AgdWvXibujTfRhDNEfuOsKO0Ynt0KptRZgmUH54zKMLlsdZ3zo0Y3qNJ2CwN4HbEpVWwYrDb9PqzD0VvO4n4a7INAm1OfPECtqkKo5i/WfAg4xQqHX9Uv9sjSJ5wR2YCe3LJrxMYG06O3zRK8HMK7xcTM/hhazJ+KNSgUvaiW0dAcEq9h9dXMbkUVbrpBawXD4AtY0JQ0fSMhwLzydii5xRylteFUFfpnGXgGi6j2IuDcvZFJS479fMR0/tOYvRCb1wjs5jvMMVq111U+y9o05SUk6H8b4kjUsTljKf/rsWPXSCAUGCjQoy7pPTSsTaoRJZYu4+tqNugoWwCJcTAy5Hi2DjhVyozrsrTLHXZeErn7wR3XGd+RkZIsXs=
   file:
-    - Lec7/lec7.pdf
-  skip_cleaning: true
+    - "Lec7/lec7.pdf"
   on:
     tags: true
+    repo: SaswatPadhi/W16_CS281
