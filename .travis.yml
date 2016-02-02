@@ -1,0 +1,20 @@
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - pgf
+      - texlive
+
+script:
+  - cd Lec7 && make all && cd ..
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "jwBeKf6C44xtVcZ2s81M//iZeH4OJTfuMlD7JEvqkdh1e1XBpjOiTMgvu3oyPSP1OJUUk14Ot80KcNb99LPki1tdTsHU4qcg6/MrVIXDcKpuliNRfc4GcpNEORwe8seCU5cf7KXCX4ixnpXb5CFk7oOKMEczHlKaBzk+3Zo8CyDoP0G6qLk3RPrLkd3FqIQBloVNmPTaw7J5tOUGcmFXpOnOVLpKr3uZDeHN17+qz7+yOltjXsdBoS2R2sF88HLzztnkOFCo5l/KIYfuO2/NaTOYhAEvpwRgqAew9zoT8EPZrv0DFMwG8fm6uwVhFlaCmT6vQ9AEPgLLrlabqMKFCHxC7ul/sDUtT5ngt8Ez6rhtw86k++Xp4NgUnTHlEfK1szJejWGGBbPOFUofm3S2vUJFg81VmA5A4/L7wRomcr7Z5HkFIz0U3PC7+pqTmYmm6DdF+D+RN2XhObkb8qNo9duimUHasbt4k/R9p2iMdwwrtWzj18VxT/O5H5l2Kk8bni6udDtfwgi5Lz6f9bUPw3I+gs5mJjpI0ykFNhS/CY1UYhv+NZOD6bueOGlievx7DSd27F2CC5F6YlAcPm4PzI2TCtL4j2qm4/z7gMBFt7mmgWPlaK7f+Caia4bPA06xGkSsuCCa086PZ+onR+xUUUkqqghIW+qyCTmmnMQRYxI="
+  file:
+    - Lec7/lec7.pdf
+  skip_cleaning: true
+  on:
+    tags: true
