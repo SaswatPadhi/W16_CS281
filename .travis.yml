@@ -6,10 +6,11 @@ addons:
   apt:
     packages:
     - pgf
+    - latexmk
     - texlive
 
 script:
-- cd Lec7 && make all && cd ..
+- cd Lec7 && latexmk && cd ..
 
 notifications:
   email: false

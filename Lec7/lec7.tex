@@ -140,7 +140,7 @@ inputs $n$, within time $O(T(n))$.
 
 \noindent
 Fortunately, most functions of practical interest; for example
-$42n$, $n^{1.23}$, $\sqrt[k]{n}$ etc. are all \term{time constructible}. In fact
+$42n$, $n^2$, $n\log{n}$, $2^n$ etc. are all \term{time constructible}. In fact
 it is quite hard to craft a computable function which is not
 \term{time constructible}, as we did using diagonalization in last lecture.
 
@@ -207,7 +207,7 @@ $$
 \end{figure}
 
 We prove this theorem by diagonalization. Consider all Turing recognizable
-languages. The diagonalization step is to flip the diagonal entries of only 
+languages. The diagonalization step is to flip the diagonal entries of only
 those rows which correspond to machines in \family{DTIME}(t(n)), to create a
 language \langset{L} which is guaranteed not to be computable by any Turing
 machine in \family{DTIME}(t(n)). \\
@@ -352,7 +352,7 @@ i.e. $\{0,1\}^* \setminus \langset{L}$.
 
 \begin{figure}[h]
 \centering
-\graphicspath{{include/fig_classes/}}
+\graphicspath{{./include/fig_classes/}}
 \includegraphics[scale=2]{fig_classes.pdf}
 \caption{Relationship between complexity classes and their \family{co-}classes,
 within $\family{P}^\namedlangset{SAT}$. It is not known if
@@ -508,7 +508,7 @@ $i \in \{1, 2, 3 \ldots\}$ and at each stage $i$, we:
   \item declare status of a finite set of strings
     i.e. determine whether or not the string $\in$ \langset{O}
   \item regardless of yet to be declared inputs ensure
-    $\langset{L}_\langset{O} \neq \langset{L}(\machine{M}_i^\langset{O})$ 
+    $\langset{L}_\langset{O} \neq \langset{L}(\machine{M}_i^\langset{O})$
 \end{itemize}
 
 \noindent
