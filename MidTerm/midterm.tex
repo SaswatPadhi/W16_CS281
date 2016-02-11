@@ -1,0 +1,236 @@
+\documentclass[usletter]{article}
+\usepackage[margin=1.5in]{geometry}
+
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[mathscr]{eucal}
+
+\usepackage{scribe}
+
+\newcommand {\namedset}[1]     {\ensuremath{\mathbb{#1}}}
+\newcommand {\langset}[1]      {\ensuremath{\mathcal{#1}}}
+\newcommand {\machine}[1]      {\ensuremath{\mathscr{#1}}}
+\newcommand {\family}[1]       {\ensuremath{\textnormal{\textsf{#1}}}}
+\newcommand {\namedlangset}[1] {\ensuremath{\textnormal{\textsc{#1}}}}
+
+\newcommand {\term}[1]      {\textit{#1}}
+\newcommand {\namethm}[1]   {\term{#1} Theorem}
+\newcommand {\usingthm}[1]  {(Using \namethm{#1})}
+
+\newcommand {\indpar}[1]   {
+  \par\leftskip=#1em
+  \noindent\ignorespaces
+}
+\newenvironment{turing}[2] {
+  \smallskip
+  \indpar{2}
+  \textbf{Machine:} #1\\
+  \textbf{Input:} $#2$\\[5pt]
+  \textbf{begin}
+  \parskip=0pt
+  \indpar{3}
+}{
+  \indpar{2}
+  \textbf{end}
+  \par\medskip
+}
+
+\renewcommand {\theenumi}{\textbf{\arabic{enumi}}}
+\renewcommand {\labelenumi}{\theenumi}
+\setlength \labelsep {\dimexpr\labelsep + 1em\relax}
+
+\newcommand{\ie}{\textnormal{i.e.}}
+\newcommand{\todo}[1]{{\large \textbf{TODO: #1}}}
+
+%%% Defaults for languages and machines
+\newcommand {\langL}          {\langset{L}}
+\newcommand {\machineM}       {\machine{M}}
+\newcommand {\allstrings}     {\ensuremath{\{0,1\}^*}}
+\newcommand {\polystrings}[1] {\ensuremath{\{0,1\}^{|#1|^c}}}
+%%%
+
+\begin{document}
+
+\makeheader {Saswat Padhi} {February 17, 2016}
+            {CS 281A -- Computability and Complexity}
+
+\begin{enumerate}
+  \item Given languages $\langL_1$, $\langL_2$, $\langL_3 \in \family{NP}$,
+        prove that $\langL_1 \cup (\langL_2 \cap \langL_3) \in \family{NP}$.
+  \begin{proof}
+    By definition of \family{NP}, the following $3$ Turing machines exist:
+    \begin{align}
+      \label{q1_m1} \exists \textnormal{ a non-deterministic poly-time TM }
+                      \machineM_1 \textnormal{ which decides } \langL_1 \\
+      \label{q1_m2} \exists \textnormal{ a non-deterministic poly-time TM }
+                      \machineM_2 \textnormal{ which decides } \langL_2 \\
+      \label{q1_m3} \exists \textnormal{ a non-deterministic poly-time TM }
+                      \machineM_3 \textnormal{ which decides } \langL_3
+    \end{align}
+    Then the following TM $\machineM'$ exists, using these machines:
+    \begin{turing}{$\machineM'$}{x}
+      non-deterministically simulate $\machineM_1(x)$,
+        and return $1$ if it returns $1$ \\
+      non-deterministically simulate $\machineM_2(x)$,
+        and return $0$ if it returns $0$ \\
+      non-deterministically simulate $\machineM_3(x)$,
+        and return $0$ if it returns $0$ \\
+      return $1$
+    \end{turing}
+    Clearly, $\machineM'$ is a (non-deterministic) poly-time TM;
+    because simulating (three) poly-time TMs only incurs \textit{logarithmic}
+    time overhead, as in case of a \term{Universal TM}. \\
+    Concretely, the running time of $\machineM'$ would be
+    $O((k_1 |x|^{k_1} + k_2 |x|^{k_2} + k_3 |x|^{k_3}) \log(|x|))$
+    where $\machineM_i$ runs in $O(|x|^{k_i})$;
+    or equivalently $O(|x|^{\max(k_1, k_2, k_3)})$.
+    Thus, $\langL(\machineM') \in \family{NP}$.
+
+    \begin{claim}
+      $\forall x : x \in \langL_1 \cup (\langL_2 \cap \langL_3)
+                  \Rightarrow x \in \langL(\machineM')$
+      \ie $\langL_1 \cup (\langL_2 \cap \langL_3) \subseteq \langL(\machineM')$.
+    \end{claim}
+    \begin{proof}
+      Assume an arbitrary string input $x \in \allstrings$.
+      \begin{align*}
+        x \in \langL_1 \cup (\langL_2 \cap \langL_3)
+          &\Rightarrow x \in \langL_1
+              \vee (x \in \langL_2 \wedge x \in \langL_3) \\
+          &\Rightarrow \machineM_1(x) = 1
+            \vee (\machineM_2(x) = 1 \wedge \machineM_3(x) = 1)
+            & \textnormal{(Using \ref{q1_m1}, \ref{q1_m2}, \ref{q1_m3})} \\
+          &\Rightarrow \machineM'(x) = 1 & \textnormal{(by construction)}
+      \end{align*}
+      Therefore,
+      $\langL_1 \cup (\langL_2 \cap \langL_3) \subseteq \langL(\machineM')$.
+    \end{proof}
+
+    \begin{claim}
+      $\langL(\machineM') \subseteq \langL_1 \cup (\langL_2 \cap \langL_3)$
+      \ie $\forall x : x \in \langL(\machineM')
+                      \Rightarrow x \in \langL_1 \cup (\langL_2 \cap \langL_3)$.
+    \end{claim}
+    \begin{proof}
+      Assume an arbitrary string input $x \in \allstrings$.
+      By construction of $\machineM'$:
+      \begin{align*}
+        &x \in \langL(\machineM') \ \ie \ \machineM'(x) = 1 \\
+        &\Rightarrow \machineM_1(x) = 1
+          \vee \neg ((\machineM_1(x) \neq 1 \wedge \machineM_2(x) = 0)
+                     \vee (\machineM_1(x) \neq 1 \wedge \machineM_2(x) \neq 0
+                                                 \wedge \machineM_3(x) = 0)) \\
+        &\textnormal{(simplification)} \\
+        &\Rightarrow \machineM_1(x) = 1
+          \vee (\machineM_2(x) = 1 \wedge \machineM_3(x) = 1) \\
+        &\Rightarrow x \in \langL_1
+          \vee (x \in \langL_2 \wedge x \in \langL_3) \\
+        &\Rightarrow x \in \langL_1 \cup (\langL_2 \cap \langL_3)
+      \end{align*}
+      Therefore,
+      $\langL(\machineM') \subseteq \langL_1 \cup (\langL_2 \cap \langL_3)$.
+    \end{proof}
+
+    Thus, we have proved that
+    $\langL(\machineM') =
+     \langL_1 \cup (\langL_2 \cap \langL_3) \in \family{NP}$.
+  \end{proof}
+
+\begin{remark}
+    In fact, we can always treat unions as disjunctions and intersections as
+    conjunctions over machine outputs;
+    to prove that \family{NP} is closed under these operations.
+  \end{remark}
+
+  \item Prove that $\lfloor n^{\frac{2016}{2015}} \rfloor$
+        is \term{time-constructible}.
+  \begin{proof}
+    We need to show that, there exists some TM \machineM,
+    which maps $1^n \mapsto 1^{\lfloor n^{2016/2015} \rfloor}$
+    in time $O(\lfloor n^{\frac{2016}{2015}} \rfloor)$.
+  \end{proof}
+
+  \item Consider the following task: given the encoding $\alpha \in \allstrings$
+        of a TM $\machineM_\alpha$ that halts on \textit{every} input,
+        determine whether $\machineM_\alpha$ runs in constant time.
+        Either give an algorithm for this problem
+        or prove that it is undecidable.
+  \begin{proof}[Solution]
+  \end{proof}
+
+  \item Let \langL\ denote the set of langauges decidable by TMs with a
+        \namedlangset{Halt} oracle.
+        Prove that their exists a language not in \langL.
+        Can you define it explicitly?
+  \begin{proof}
+    We would prove this using diagonalization. We consider all TMs equipped with
+    \namedlangset{Halt} oracles, and construct a language which differs from the
+    language of all of these TMs.
+
+    No TM $\machineM^\namedlangset{Halt}$ would be able to decide whether or not
+    a given relativized TM $\machineM_z^\namedlangset{Halt}$ halts on a given
+    input $x$.
+  \end{proof}
+
+  \item Prove that if $\family{PH} = \family{PSPACE}$,
+        then the polynomial hierarchy collapses.
+  \begin{proof}
+    From lecture \cite{lec6}, we know that
+    $\namedlangset{TQBF} \in \family{PSPACE-C}$ (\family{PSPACE}-complete).
+    So, we have $\namedlangset{TQBF} \in \family{PH-C}$ by our assumption.
+    As discussed in class, just the \textit{non-emptiness} of \family{PH-C},
+    collapses the polynomial hierarchy!
+  \end{proof}
+
+  \item Prove that
+        $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}$.
+  \begin{proof}
+    This proof would be very similar to a proof we did in class, which showed
+    $\exists \textnormal{ an oracle } \langset{O}:
+      \family{P}^\langset{O} = \family{NP}^\langset{O}$.
+    We showed that $\family{EXP} \subseteq \family{P}^\langset{O}
+                                 \subseteq \family{NP}^\langset{O}
+                                 \subseteq \family{EXP}$.
+    Similarly, we would prove in this case, that
+    $\family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF}
+                     \subseteq \family{NP}^\namedlangset{TQBF}
+                     \subseteq \family{PSPACE}$.
+
+    It trivially holds that
+    $\family{P}^\namedlangset{TQBF} \subseteq \family{NP}^\namedlangset{TQBF}$;
+    since every deterministic poly-time TM is also a non-deterministic poly-time
+    TM. Thus, we only have to prove the following:
+
+    \begin{claim}
+      $ \family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF} $.
+    \end{claim}
+
+    \begin{claim}
+      $ \family{NP}^\namedlangset{TQBF} \subseteq \family{PSPACE} $.
+    \end{claim}
+
+    Therefore, we have
+    $\family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF}
+                     \subseteq \family{NP}^\namedlangset{TQBF}
+                     \subseteq \family{PSPACE}$;
+    from which it follows immediately that
+    $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}$.
+  \end{proof}
+
+  \item Prove that $\family{NTIME}(n^{2016}) \subsetneq \family{PSPACE}$.
+  \begin{proof}
+  \end{proof}
+
+  \item Is there an algorithm that evaluates totally quantified Boolean formulas
+        of size $n$ in space $O(n^{1/2016})$? Prove your answer.
+  \begin{proof}[Solution]
+  \end{proof}
+\end{enumerate}
+
+\bibliographystyle{abbrv}
+\bibliography{midterm}
+
+\end{document}
