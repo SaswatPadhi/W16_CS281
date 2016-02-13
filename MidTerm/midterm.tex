@@ -13,8 +13,9 @@
 \newcommand {\namedset}[1]     {\ensuremath{\mathbb{#1}}}
 \newcommand {\langset}[1]      {\ensuremath{\mathcal{#1}}}
 \newcommand {\machine}[1]      {\ensuremath{\mathscr{#1}}}
-\newcommand {\family}[1]       {\ensuremath{\textnormal{\textsf{#1}}}}
+\newcommand {\langfunc}        {\ensuremath{\mathfrak{L}}}
 \newcommand {\namedlangset}[1] {\ensuremath{\textnormal{\textsc{#1}}}}
+\newcommand {\family}[1]       {\ensuremath{\textnormal{\textsf{#1}}}}
 
 \newcommand {\term}[1]      {\textit{#1}}
 \newcommand {\namethm}[1]   {\term{#1} Theorem}
@@ -87,12 +88,12 @@
     $O((k_1 |x|^{k_1} + k_2 |x|^{k_2} + k_3 |x|^{k_3}) \log(|x|))$
     where $\machineM_i$ runs in $O(|x|^{k_i})$;
     or equivalently $O(|x|^{\max(k_1, k_2, k_3)})$.
-    Thus, $\langL(\machineM') \in \family{NP}$.
+    Thus, $\langfunc(\machineM') \in \family{NP}$.
 
     \begin{claim}
       $\forall x : x \in \langL_1 \cup (\langL_2 \cap \langL_3)
-                  \Rightarrow x \in \langL(\machineM')$
-      \ie $\langL_1 \cup (\langL_2 \cap \langL_3) \subseteq \langL(\machineM')$.
+                  \Rightarrow x \in \langfunc(\machineM') \ie
+        \langL_1 \cup (\langL_2 \cap \langL_3) \subseteq \langfunc(\machineM')$.
     \end{claim}
     \begin{proof}
       Assume an arbitrary string input $x \in \allstrings$.
@@ -106,19 +107,19 @@
           &\Rightarrow \machineM'(x) = 1 & \textnormal{(by construction)}
       \end{align*}
       Therefore,
-      $\langL_1 \cup (\langL_2 \cap \langL_3) \subseteq \langL(\machineM')$.
+      $\langL_1 \cup (\langL_2 \cap \langL_3) \subseteq \langfunc(\machineM')$.
     \end{proof}
 
     \begin{claim}
-      $\langL(\machineM') \subseteq \langL_1 \cup (\langL_2 \cap \langL_3)$
-      \ie $\forall x : x \in \langL(\machineM')
+      $\langfunc(\machineM') \subseteq \langL_1 \cup (\langL_2 \cap \langL_3)$
+      \ie $\forall x : x \in \langfunc(\machineM')
                       \Rightarrow x \in \langL_1 \cup (\langL_2 \cap \langL_3)$.
     \end{claim}
     \begin{proof}
       Assume an arbitrary string input $x \in \allstrings$.
       By construction of $\machineM'$:
       \begin{align*}
-        &x \in \langL(\machineM') \ \ie \ \machineM'(x) = 1 \\
+        &x \in \langfunc(\machineM') \ \ie \ \machineM'(x) = 1 \\
         &\Rightarrow \machineM_1(x) = 1
           \vee \neg ((\machineM_1(x) \neq 1 \wedge \machineM_2(x) = 0)
                      \vee (\machineM_1(x) \neq 1 \wedge \machineM_2(x) \neq 0
@@ -131,11 +132,11 @@
         &\Rightarrow x \in \langL_1 \cup (\langL_2 \cap \langL_3)
       \end{align*}
       Therefore,
-      $\langL(\machineM') \subseteq \langL_1 \cup (\langL_2 \cap \langL_3)$.
+      $\langfunc(\machineM') \subseteq \langL_1 \cup (\langL_2 \cap \langL_3)$.
     \end{proof}
 
     Thus, we have proved that
-    $\langL(\machineM') =
+    $\langfunc(\machineM') =
      \langL_1 \cup (\langL_2 \cap \langL_3) \in \family{NP}$.
   \end{proof}
 
@@ -151,6 +152,7 @@
     We need to show that, there exists some TM \machineM,
     which maps $1^n \mapsto 1^{\lfloor n^{2016/2015} \rfloor}$
     in time $O(\lfloor n^{\frac{2016}{2015}} \rfloor)$.
+    \todo{solve}
   \end{proof}
 
   \item Consider the following task: given the encoding $\alpha \in \allstrings$
@@ -159,6 +161,7 @@
         Either give an algorithm for this problem
         or prove that it is undecidable.
   \begin{proof}[Solution]
+    \todo{solve}
   \end{proof}
 
   \item Let \langL\ denote the set of langauges decidable by TMs with a
@@ -169,6 +172,7 @@
     We would prove this using diagonalization. We consider all TMs equipped with
     \namedlangset{Halt} oracles, and construct a language which differs from the
     language of all of these TMs.
+    \todo{write}
 
     No TM $\machineM^\namedlangset{Halt}$ would be able to decide whether or not
     a given relativized TM $\machineM_z^\namedlangset{Halt}$ halts on a given
@@ -183,6 +187,7 @@
     So, we have $\namedlangset{TQBF} \in \family{PH-C}$ by our assumption.
     As discussed in class, just the \textit{non-emptiness} of \family{PH-C},
     collapses the polynomial hierarchy!
+    \todo{write}
   \end{proof}
 
   \item Prove that
@@ -207,26 +212,67 @@
     \begin{claim}
       $ \family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF} $.
     \end{claim}
+    \begin{proof}
+      We know that $\namedlangset{TQBF} \in \family{PSPACE-C}$. So we have,
+      $$\namedlangset{TQBF} \preceq_p \langL \quad \ie \quad
+      x \in \langL \Longleftrightarrow p_\langL^\namedlangset{TQBF} (x)
+        \in \namedlangset{TQBF} $$
+      where $\preceq_p$ denotes poly-time reduction, and
+      $p_\langL^\namedlangset{TQBF} (x)$ is a poly-time transformation function,
+      which can transform an instance of \langL to that of \namedlangset{TQBF}.
+
+      Then following TM equipped with oracle \namedlangset{TQBF} would be able
+      to decide \langL:
+      \begin{turing}{$\machineM_\langL^\namedlangset{TQBF}$}{x}
+        apply the polynomial time transformation
+          $p_\langL^\namedlangset{TQBF}(x)$ resulting in $y$ \\
+        \texttt{query} oracle \namedlangset{TQBF} for $y$ \\
+        return the result from the oracle
+      \end{turing}
+      Clearly,
+      $\forall \langL \in \family{PSPACE} :
+        \langL = \langfunc(\machineM_\langL^\namedlangset{TQBF})
+        \wedge \langfunc(\machineM_\langL^\namedlangset{TQBF})
+          \in \family{P}^\namedlangset{TQBF}$.
+
+      Thus, $\family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF}$.
+    \end{proof}
 
     \begin{claim}
-      $ \family{NP}^\namedlangset{TQBF} \subseteq \family{PSPACE} $.
+      $ \family{NP}^\namedlangset{TQBF} \subseteq \family{NPSPACE} $.
     \end{claim}
+    \begin{proof}
+      By definition a TM in \family{NP}, uses at most polynomial amount of space
+      and thus $\family{NP} \subseteq \family{NPSPACE}$. \\
+      We also know that $\namedlangset{TQBF} \in \family{PSPACE}$. So we can
+      encode the TM for \namedlangset{TQBF} into our non-deterministic TM,
+      instead of using it as an oracle, and we would still use polynomial amount
+      of space (if we re-use the same cells for computations every time we
+      invoke this TM). \\
+      Thus, instead of relativizing if we simply embed the TM for \family{TQBF},
+      we have a non-deterministic TM with the same language which still in
+      polynomial space.
+    \end{proof}
 
     Therefore, we have
     $\family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF}
                      \subseteq \family{NP}^\namedlangset{TQBF}
-                     \subseteq \family{PSPACE}$;
+                     \subseteq \family{NPSPACE}
+                     \subseteq \family{PSPACE}$
+    (the last containment is due to Savitch's Theorem);
     from which it follows immediately that
     $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}$.
   \end{proof}
 
   \item Prove that $\family{NTIME}(n^{2016}) \subsetneq \family{PSPACE}$.
   \begin{proof}
+    \todo{solve}
   \end{proof}
 
   \item Is there an algorithm that evaluates totally quantified Boolean formulas
         of size $n$ in space $O(n^{1/2016})$? Prove your answer.
   \begin{proof}[Solution]
+    \todo{solve}
   \end{proof}
 \end{enumerate}
 
