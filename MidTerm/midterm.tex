@@ -7,7 +7,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[mathscr]{eucal}
-
+\usepackage{cancel}
 \usepackage{scribe}
 
 \newcommand {\namedset}[1]     {\ensuremath{\mathbb{#1}}}
@@ -169,14 +169,105 @@
         Prove that their exists a language not in \langL.
         Can you define it explicitly?
   \begin{proof}
-    We would prove this using diagonalization. We consider all TMs equipped with
-    \namedlangset{Halt} oracles, and construct a language which differs from the
-    language of all of these TMs.
-    \todo{write}
+    \begin{figure}[h]
+    \centering
+    \def\arraystretch{1.8}\tabcolsep=6pt
+    \begin{tabular}{|c||c|c|c|c|c|c|c|c|c|c|c|c|}
+      \hline
+      \textbf{\langL} \textbackslash~$x$
+        & 0 & 1 & 00 & 01 & 10 & 11 & \ldots & $x_i$ & $x_{i+1}$ & \ldots
+        & $x_j$ & \ldots \\\hline\hline
 
-    No TM $\machineM^\namedlangset{Halt}$ would be able to decide whether or not
-    a given relativized TM $\machineM_z^\namedlangset{Halt}$ halts on a given
-    input $x$.
+      $\langL_{0}$ \hfill & \cancel{0}~\textbf{1} & 1 & 0 & 1 & 0 & 0 & \ldots
+                          & 1 & 0 & \ldots & 1 & \ldots \\\hline
+      $\langL_{1}$ & 0 & \cancel{0}~\textbf{1} & 1 & 0 & 1 & 1 & \ldots & 1 & 1
+                   & \ldots & 1 & \ldots \\\hline
+      $\langL_{00}$ \hfill & 1 & 0 & \cancel{1}~\textbf{0} & 1 & 0 & 1 & \ldots
+                           & 0 & 0 & \ldots & 0 & \ldots \\\hline
+      $\langL_{01}$ \hfill & 1 & 0 & 0 & \cancel{1}~\textbf{0} & 0 & 0 & \ldots
+                           & 1 & 1 & \ldots & 0 & \ldots \\\hline
+      \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots
+             & \ldots & \ldots & \ldots & \ldots & \ldots \\\hline
+      $\langL_{i}$ \hfill & 1 & 0 & 0 & 1 & 1 & 0 & \ldots
+                          & \cancel{1}~\textbf{0} & 1 & \ldots & 0
+                          & \ldots \\\hline
+      $\langL_{i+1}$ & 0 & 1 & 1 & 1 & 0 & 0 & \ldots & 1
+                     & \cancel{0}~\textbf{1} & \ldots & 0 & \ldots \\\hline
+      \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots
+             & \ldots & \ldots & \ldots & \ldots & \ldots \\\hline
+      $\langL_{j}$ \hfill & 0 & 0 & 0 & 1 & 1 & 0 & \ldots & 1 & 1 & \ldots
+                          & \cancel{0}~\textbf{1} & \ldots \\\hline
+      \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots
+             & \ldots & \ldots & \ldots & \ldots & \ldots \\\hline
+    \end{tabular}
+    \caption{We enumerate the languages $\langL_m \in \langL$, decidable by the
+      oracle machines equipped with \namedlangset{Halt}, and all strings in
+      $\{0, 1\}^*$. Note that the enumeration of $\langL_m$ might be arbitrary.
+      In particular $m$ need not have any relation to the oracle machine whose
+      language is $\langL_m$. In the above table, $\left< \langL_m, x_n \right>$
+      cell is $1$ if $x_n \in \langL_m$, else $0$.  Using a typical
+      diagonalization argument, we can construct the language
+      $\langL_{Diag} = \{ x_n \mid x_n \not\in \langL_n \}$
+      s.t. $\langL_{Diag} \not\in \langL$.}
+    \label{diag_table}
+    \end{figure}
+
+    We would prove this using diagonalization. Consider all languages decidable
+    using oracle machines equipped with \namedlangset{Halt}, and all strings in
+    $\{0,1\}^*$. As shown in Figure \ref{diag_table}; by simply inverting the
+    memberships of diagonal elements i.e the cells $\left< \langL_n,x_n \right>$
+    , we have a new language $\langL_{Diag}$ which we show that, does not belong
+    to \langL.
+    \begin{equation}
+      \label{L_Diag}
+      \langL_{Diag} = \{ x_n \mid x_n \not\in \langL_n \}
+    \end{equation}
+    \begin{claim}
+      $ \langL_{Diag} \not\in \langL $.
+    \end{claim}
+    \begin{proof}
+      For the sake of contradiction, assume $\langL_{Diag} \in \langL$. Then,
+      there must exist some language $\langL_m \in \langL$ in Figure
+      \ref{diag_table} s.t. $\langL_m = \langL_{Diag}$.
+
+      Now consider the string $x_m$ and the cell $\left< \langL_m, x_m \right>$.
+      There are only 2 possible values for the cell: $0$ or $1$, or equivalently
+      either $x_m \in \langL_m$ or $x_m \not\in \langL_m$.
+
+      \textsc{Case 1: $x_m \in \langL_m$}
+      \begin{align*}
+        x_m \in \langL_m \quad &\Rightarrow \quad x_m \not\in \langL_{Diag}
+            & (\textnormal{definition from Equation }\ref{L_Diag})\\
+          &\Rightarrow \quad x_m \not\in \langL_m
+            & (\textnormal{assumed }\langL_m = \langL_{Diag})
+      \end{align*}
+      We thus have a contradiction in case 1!
+
+      \textsc{Case 2: $x_m \not\in \langL_m$}
+      \begin{align*}
+        x_m \not\in \langL_m \quad &\Rightarrow \quad x_m \in \langL_{Diag}
+            & (\textnormal{definition from Equation }\ref{L_Diag})\\
+          &\Rightarrow \quad x_m \in \langL_m
+            & (\textnormal{assumed }\langL_m = \langL_{Diag})
+      \end{align*}
+      Again, we have a contradiction in case 2 as well!
+
+      Thus, our assumption  $\langL_{Diag} \in \langL$ must be false, and hence
+      $\langL_{Diag} \not\in \langL$.
+    \end{proof}
+
+    Note that, since we did not assume any order of enumeration for $\langL_m$
+    in Figure \ref{diag_table}, the membership check $x_n \in \langL_n$ required
+    for $\langL_{Diag}$ is effectively checking membership of an arbitrary
+    string in an arbitrary language. Given the fact that these languages are
+    decidable by oracle machines equipped with \namedlangset{Halt}, we can
+    re-write $\langL_{Diag}$ as:
+    $$
+      \langL_{Diag} = \{ \left< \alpha , x \right> \mid
+                         \machineM_\alpha^\namedlangset{Halt}(x) = 0 \}
+    $$
+    which is the (co-)\term{Halting Problem} defined on oracle machines equipped with
+    \namedlangset{Halt}!
   \end{proof}
 
   \item Prove that if $\family{PH} = \family{PSPACE}$,
