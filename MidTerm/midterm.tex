@@ -140,7 +140,7 @@
      \langL_1 \cup (\langL_2 \cap \langL_3) \in \family{NP}$.
   \end{proof}
 
-\begin{remark}
+  \begin{remark}
     In fact, we can always treat unions as disjunctions and intersections as
     conjunctions over machine outputs;
     to prove that \family{NP} is closed under these operations.
@@ -357,7 +357,24 @@
 
   \item Prove that $\family{NTIME}(n^{2016}) \subsetneq \family{PSPACE}$.
   \begin{proof}
-    \todo{solve}
+    The proof can be elegantly summarized in one line as:
+    $$
+      \family{NTIME}(n^{2016}) \subseteq^1 \family{NSPACE}(n^{2016})
+                               \subseteq^2 \family{DSPACE}(n^{4032})
+                               \subsetneq^3 \family{DSPACE}(n^{4033})
+                               \subseteq^4 \family{PSPACE}
+    $$
+    Each containment relation is numbered to uniquely identify it in the
+    explanation below:
+
+    $\subseteq^1$ holds because any TM can visit at most $T(n)$ cells, if it
+    runs in time $T(n)$.
+
+    $\subseteq^2$ holds directly because of Savitch's Theorem \cite{SAVITCH1970}.
+
+    $\subsetneq^3$ holds directly because of Space Hierarchy Theorem.
+
+    $\subseteq^4$ holds by the definition of \family{PSPACE}.
   \end{proof}
 
   \item Is there an algorithm that evaluates totally quantified Boolean formulas
