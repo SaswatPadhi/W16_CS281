@@ -47,7 +47,7 @@
 \renewcommand {\labelenumi}{\theenumi}
 \setlength \labelsep {\dimexpr\labelsep + 1em\relax}
 
-\newcommand{\ie}{\textnormal{i.e.}}
+\newcommand{\ie}{\textnormal{i.e. }}
 \newcommand{\todo}[1]{{\large \textbf{TODO: #1}}}
 
 %%% Defaults for languages and machines
@@ -126,7 +126,7 @@
       Assume an arbitrary string input $x \in \allstrings$.
       By construction of $\machineM'$:
       \begin{align*}
-        &x \in \langfunc(\machineM') \ \ie \ \machineM'(x) = 1 \\
+        &x \in \langfunc(\machineM') \ie \machineM'(x) = 1 \\
         &\Rightarrow \machineM_1(x) = 1
           \vee \neg ((\machineM_1(x) \neq 1 \wedge \machineM_2(x) = 0)
                      \vee (\machineM_1(x) \neq 1 \wedge \machineM_2(x) \neq 0
@@ -176,7 +176,7 @@
   \begin{proof}[Solution]
     We prove that this language (call it \namedlangset{Const}) is undecidable;
     by showing that \namedlangset{Halt} can be reduced to this problem
-    \ie\ $\namedlangset{Halt} \reduce{}{} \namedlangset{Const}$.
+    \ie $\namedlangset{Halt} \reduce{}{} \namedlangset{Const}$.
 
     Consider the following TM; parameterized by encoding $\alpha$ of some given
     TM $\machineM_\alpha$ and some input $x$ for it. It essentially simulates
@@ -195,10 +195,13 @@
       \item $\machine{H}^\alpha_x(k)$ \textit{always} halts; for all inputs $k$
             and regardless of $\alpha$ and $x$.
       \item If $\machineM_\alpha$ \textit{never} halts on $x$;
-            then $\machine{H}^\alpha_x(k)$ runs in linear time, for all $k$.
+            then $\machine{H}^\alpha_x(k)$ runs in linear time, for all $k$. \\
+            In this case, $\forall k : \machine{H}^\alpha_x(k) = 1$.
       \item If $\machineM_\alpha$ eventually halts on $x$;
             then $\exists l_0 : \forall k : \machine{H}^\alpha_x(k)$ halts in
-            at most $l_0$ steps.
+            at most $l_0$ steps. \\
+            In this case, $|k| > l_0 \Rightarrow \machine{H}^\alpha_x(k) = 0$,
+            and $\machine{H}^\alpha_x(k) = 1$ otherwise.
     \end{itemize}
 
     Now, consider the following TM which should decide \namedlangset{Halt},
@@ -344,7 +347,7 @@
     (so $\namedlangset{TQBF} \in \family{PH}$),
     then $\namedlangset{TQBF} \in \family{\Sigma_k}$, for some $k$.
 
-    Consider any $\langL \in \family{\Sigma_j}$ for any $j > k$.
+    Consider any $\langL \in \family{\Sigma_j}$ for any $j > k$. \\
     Since \namedlangset{TQBF} is \complete{p}{} for \family{PH},
     $\langL \reduce{p}{} \namedlangset{TQBF}$. \\
     As we can transform any instance of \langL,
@@ -429,7 +432,7 @@
     $\family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF}
                      \subseteq \family{NP}^\namedlangset{TQBF}
                      \subseteq \family{NPSPACE} = \family{PSPACE}$
-    (the last equality is because of Savitch's Theorem \cite{SAVITCH1970});
+    (the last equality is because of Savitch's Theorem \cite{Savitch70});
     and then it follows immediately that
     $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}
                                     = \family{NPSPACE} = \family{PSPACE}$.
@@ -452,7 +455,7 @@
     $\subseteq^1$ holds because any TM can visit at most $T(n)$ cells, if it
     runs in time $T(n)$.
 
-    $\subseteq^2$ holds directly because of Savitch's Theorem \cite{SAVITCH1970}.
+    $\subseteq^2$ holds directly because of Savitch's Theorem \cite{Savitch70}.
 
     $\subsetneq^3$ holds because of Space Hierarchy Theorem (and the
     definition of \family{PSPACE}).
