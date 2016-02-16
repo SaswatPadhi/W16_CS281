@@ -174,7 +174,45 @@
         or prove that it is undecidable.
   %-----------------------------------------------------------------------------
   \begin{proof}[Solution]
-    \todo{solve}
+    We prove that this language (call it \namedlangset{Const}) is undecidable;
+    by showing that \namedlangset{Halt} can be reduced to this problem
+    \ie\ $\namedlangset{Halt} \reduce{}{} \namedlangset{Const}$.
+
+    Consider the following TM; parameterized by encoding $\alpha$ of some given
+    TM $\machineM_\alpha$ and some input $x$ for it. It essentially simulates
+    $\machineM_\alpha(x)$ for certain steps (\ie time):
+    \begin{turing}{$\machine{H}^\alpha_x$}{k}
+      for $|k|$ steps:
+        \indpar{4}
+        simulate single step of $\machineM_\alpha(x)$ \\
+        if $\machineM_\alpha$ halts, return 1
+      \indpar{3}
+      return 0
+    \end{turing}
+
+    By construction, the following observations are immediate:
+    \begin{itemize}
+      \item $\machine{H}^\alpha_x(k)$ \textit{always} halts; for all inputs $k$
+            and regardless of $\alpha$ and $x$.
+      \item If $\machineM_\alpha$ \textit{never} halts on $x$;
+            then $\machine{H}^\alpha_x(k)$ runs in linear time, for all $k$.
+      \item If $\machineM_\alpha$ eventually halts on $x$;
+            then $\exists l_0 : \forall k : \machine{H}^\alpha_x(k)$ halts in
+            at most $l_0$ steps.
+    \end{itemize}
+
+    Now, consider the following TM which should decide \namedlangset{Halt},
+    assuming the existence of $\machineM_\namedlangset{Const}$ which decides if
+    a TM (that always halts), runs in constant time:
+    \begin{turing}{$\machineM_\namedlangset{Halt}$}{(\alpha, x)}
+      construct the machine $\machine{H}^\alpha_x$ and encode it as $\beta$\\
+      return the result of $\machineM_\namedlangset{Const}(\beta)$
+    \end{turing}
+
+    Thus, we have decided \namedlangset{Halt} assuming the decidability of
+    \namedlangset{Const}. \\
+    But we know \namedlangset{Halt} is undecidable.
+    Therefore, \namedlangset{Const} \textit{must be} undecidable as well.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -185,6 +223,16 @@
         Can you define it explicitly?
   %-----------------------------------------------------------------------------
   \begin{proof}
+    We would prove this using diagonalization. Consider all languages decidable
+    using oracle machines equipped with \namedlangset{Halt}, and all strings in
+    $\{0,1\}^*$. As shown in Figure \ref{diag_table}; by simply inverting the
+    memberships of diagonal elements $\left< \langL_n,x_n \right>$, we have a
+    new language $\langL_{Diag}$ which we show that, does not belong to \langL.
+    \begin{equation}
+      \label{L_Diag}
+      \langL_{Diag} = \{ x_n \mid x_n \not\in \langL_n \}
+    \end{equation}
+
     \begin{figure}[h]
     \centering
     \def\arraystretch{1.8}\tabcolsep=6pt
@@ -228,15 +276,6 @@
     \label{diag_table}
     \end{figure}
 
-    We would prove this using diagonalization. Consider all languages decidable
-    using oracle machines equipped with \namedlangset{Halt}, and all strings in
-    $\{0,1\}^*$. As shown in Figure \ref{diag_table}; by simply inverting the
-    memberships of diagonal elements $\left< \langL_n,x_n \right>$, we have a
-    new language $\langL_{Diag}$ which we show that, does not belong to \langL.
-    \begin{equation}
-      \label{L_Diag}
-      \langL_{Diag} = \{ x_n \mid x_n \not\in \langL_n \}
-    \end{equation}
     \begin{claim}
       $ \langL_{Diag} \not\in \langL $.
     \end{claim}
@@ -313,7 +352,7 @@
     we thus have $\langL \in \family{\Sigma_k}$.
 
     Therefore, the polynomial hierarchy collapses to $\family{\Sigma_k}$
-    i.e. $\family{PH} = \family{\Sigma_k}$.
+    \ie $\family{PH} = \family{\Sigma_k}$.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
