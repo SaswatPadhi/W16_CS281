@@ -59,8 +59,11 @@
             {CS 281A -- Computability and Complexity}
 
 \begin{enumerate}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q1
   \item Given languages $\langL_1$, $\langL_2$, $\langL_3 \in \family{NP}$,
         prove that $\langL_1 \cup (\langL_2 \cap \langL_3) \in \family{NP}$.
+  %-----------------------------------------------------------------------------
   \begin{proof}
     By definition of \family{NP}, the following $3$ Turing machines exist:
     \begin{align}
@@ -146,8 +149,11 @@
     to prove that \family{NP} is closed under these operations.
   \end{remark}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q2
   \item Prove that $\lfloor n^{\frac{2016}{2015}} \rfloor$
         is \term{time-constructible}.
+  %-----------------------------------------------------------------------------
   \begin{proof}
     We need to show that, there exists some TM \machineM,
     which maps $1^n \mapsto 1^{\lfloor n^{2016/2015} \rfloor}$
@@ -155,19 +161,25 @@
     \todo{solve}
   \end{proof}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q3
   \item Consider the following task: given the encoding $\alpha \in \allstrings$
         of a TM $\machineM_\alpha$ that halts on \textit{every} input,
         determine whether $\machineM_\alpha$ runs in constant time.
         Either give an algorithm for this problem
         or prove that it is undecidable.
+  %-----------------------------------------------------------------------------
   \begin{proof}[Solution]
     \todo{solve}
   \end{proof}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q4
   \item Let \langL\ denote the set of langauges decidable by TMs with a
         \namedlangset{Halt} oracle.
         Prove that their exists a language not in \langL.
         Can you define it explicitly?
+  %-----------------------------------------------------------------------------
   \begin{proof}
     \begin{figure}[h]
     \centering
@@ -266,12 +278,15 @@
       \langL_{Diag} = \{ \left< \alpha , x \right> \mid
                          \machineM_\alpha^\namedlangset{Halt}(x) = 0 \}
     $$
-    which is the (co-)\term{Halting Problem} defined on oracle machines equipped with
-    \namedlangset{Halt}!
+    which is the (co-)\term{Halting Problem} defined on oracle machines equipped
+    with \namedlangset{Halt}!
   \end{proof}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q5
   \item Prove that if $\family{PH} = \family{PSPACE}$,
         then the polynomial hierarchy collapses.
+  %-----------------------------------------------------------------------------
   \begin{proof}
     From lecture \cite{lec6}, we know that
     $\namedlangset{TQBF} \in \family{PSPACE-C}$ (\family{PSPACE}-complete).
@@ -281,8 +296,11 @@
     \todo{write}
   \end{proof}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q6
   \item Prove that
         $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}$.
+  %-----------------------------------------------------------------------------
   \begin{proof}
     This proof would be very similar to a proof we did in class, which showed
     $\exists \textnormal{ an oracle } \langset{O}:
@@ -333,29 +351,32 @@
       $ \family{NP}^\namedlangset{TQBF} \subseteq \family{NPSPACE} $.
     \end{claim}
     \begin{proof}
-      By definition a TM in \family{NP}, uses at most polynomial amount of space
+      By definition, a TM in \family{NP} uses at most polynomial amount of space
       and thus $\family{NP} \subseteq \family{NPSPACE}$. \\
       We also know that $\namedlangset{TQBF} \in \family{PSPACE}$. So we can
       encode the TM for \namedlangset{TQBF} into our non-deterministic TM,
       instead of using it as an oracle, and we would still use polynomial amount
-      of space (if we re-use the same cells for computations every time we
-      invoke this TM). \\
+      of space (we re-use the same cells for computations every time we invoke
+      this TM, as oracle). \\
       Thus, instead of relativizing if we simply embed the TM for \family{TQBF},
-      we have a non-deterministic TM with the same language which still in
+      we have a non-deterministic TM with the same language which still runs in
       polynomial space.
     \end{proof}
 
     Therefore, we have
     $\family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF}
                      \subseteq \family{NP}^\namedlangset{TQBF}
-                     \subseteq \family{NPSPACE}
-                     \subseteq \family{PSPACE}$
-    (the last containment is due to Savitch's Theorem);
-    from which it follows immediately that
-    $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}$.
+                     \subseteq \family{NPSPACE} = \family{PSPACE}$
+    (the last equality is because of Savitch's Theorem \cite{SAVITCH1970});
+    and then it follows immediately that
+    $\family{P}^\namedlangset{TQBF} = \family{NP}^\namedlangset{TQBF}
+                                    = \family{NPSPACE} = \family{PSPACE}$.
   \end{proof}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q7
   \item Prove that $\family{NTIME}(n^{2016}) \subsetneq \family{PSPACE}$.
+  %-----------------------------------------------------------------------------
   \begin{proof}
     The proof can be elegantly summarized in one line as:
     $$
@@ -377,8 +398,11 @@
     $\subseteq^4$ holds by the definition of \family{PSPACE}.
   \end{proof}
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q8
   \item Is there an algorithm that evaluates totally quantified Boolean formulas
         of size $n$ in space $O(n^{1/2016})$? Prove your answer.
+  %-----------------------------------------------------------------------------
   \begin{proof}[Solution]
     \todo{solve}
   \end{proof}
