@@ -15,11 +15,15 @@
 \newcommand {\machine}[1]      {\ensuremath{\mathscr{#1}}}
 \newcommand {\langfunc}        {\ensuremath{\mathfrak{L}}}
 \newcommand {\namedlangset}[1] {\ensuremath{\textnormal{\textsc{#1}}}}
-\newcommand {\family}[1]       {\ensuremath{\textnormal{\textsf{#1}}}}
+\newcommand {\family}[1]       {\ensuremath{\mathsf{#1}}}
 
 \newcommand {\term}[1]      {\textit{#1}}
 \newcommand {\namethm}[1]   {\term{#1} Theorem}
 \newcommand {\usingthm}[1]  {(Using \namethm{#1})}
+
+\newcommand {\reduce}[2]    {\ensuremath{\preceq_{#1}^{#2}}}
+\newcommand {\complete}[2]  {\ensuremath{\reduce{#1}{#2}     %% ugly hack ahead!
+                                         \hspace*{-4pt}\textnormal{-complete}}}
 
 \newcommand {\indpar}[1]   {
   \par\leftskip=#1em
@@ -227,9 +231,8 @@
     We would prove this using diagonalization. Consider all languages decidable
     using oracle machines equipped with \namedlangset{Halt}, and all strings in
     $\{0,1\}^*$. As shown in Figure \ref{diag_table}; by simply inverting the
-    memberships of diagonal elements i.e the cells $\left< \langL_n,x_n \right>$
-    , we have a new language $\langL_{Diag}$ which we show that, does not belong
-    to \langL.
+    memberships of diagonal elements $\left< \langL_n,x_n \right>$, we have a
+    new language $\langL_{Diag}$ which we show that, does not belong to \langL.
     \begin{equation}
       \label{L_Diag}
       \langL_{Diag} = \{ x_n \mid x_n \not\in \langL_n \}
@@ -288,12 +291,29 @@
         then the polynomial hierarchy collapses.
   %-----------------------------------------------------------------------------
   \begin{proof}
-    From lecture \cite{lec6}, we know that
-    $\namedlangset{TQBF} \in \family{PSPACE-C}$ (\family{PSPACE}-complete).
-    So, we have $\namedlangset{TQBF} \in \family{PH-C}$ by our assumption.
-    As discussed in class, just the \textit{non-emptiness} of \family{PH-C},
-    collapses the polynomial hierarchy!
-    \todo{write}
+    We know, \namedlangset{TQBF} is \complete{p}{} for \family{PSPACE}. \\
+    Then, \namedlangset{TQBF} is \complete{p}{} for \family{PH},
+    if $\family{PH} = \family{PSPACE}$.
+
+    (\reduce{p}{} denotes poly-time reductions)
+
+    We will show that as discussed in class, just the \textit{non-emptiness} of
+    the set of problems which are \complete{p}{} for \family{PH}, collapses the
+    polynomial hierarchy!
+
+    If \namedlangset{TQBF} is \complete{p}{} for \family{PH}
+    (so $\namedlangset{TQBF} \in \family{PH}$),
+    then $\namedlangset{TQBF} \in \family{\Sigma_k}$, for some $k$.
+
+    Consider any $\langL \in \family{\Sigma_j}$ for any $j > k$.
+    Since \namedlangset{TQBF} is \complete{p}{} for \family{PH},
+    $\langL \reduce{p}{} \namedlangset{TQBF}$. \\
+    As we can transform any instance of \langL,
+    to an instance of \namedlangset{TQBF};
+    we thus have $\langL \in \family{\Sigma_k}$.
+
+    Therefore, the polynomial hierarchy collapses to $\family{\Sigma_k}$
+    i.e. $\family{PH} = \family{\Sigma_k}$.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -322,13 +342,16 @@
       $ \family{PSPACE} \subseteq \family{P}^\namedlangset{TQBF} $.
     \end{claim}
     \begin{proof}
-      We know that $\namedlangset{TQBF} \in \family{PSPACE-C}$. So we have,
-      $$\namedlangset{TQBF} \preceq_p \langL \quad \ie \quad
-      x \in \langL \Longleftrightarrow p_\langL^\namedlangset{TQBF} (x)
-        \in \namedlangset{TQBF} $$
-      where $\preceq_p$ denotes poly-time reduction, and
+      We know that \namedlangset{TQBF} is \complete{p}{} \family{PSPACE}. So,
+      $$
+      \forall \langL \in \family{PSPACE} : \quad
+      \langL \reduce{p}{} \namedlangset{TQBF} \quad \ie \quad
+        x \in \langL \Longleftrightarrow p_\langL^\namedlangset{TQBF} (x)
+                                         \in \namedlangset{TQBF}
+      $$
+      where \reduce{p}{} denotes poly-time reduction, and
       $p_\langL^\namedlangset{TQBF} (x)$ is a poly-time transformation function,
-      which can transform an instance of \langL to that of \namedlangset{TQBF}.
+      which can transform an instance of \langL, to that of \namedlangset{TQBF}.
 
       Then following TM equipped with oracle \namedlangset{TQBF} would be able
       to decide \langL:
@@ -358,9 +381,9 @@
       instead of using it as an oracle, and we would still use polynomial amount
       of space (we re-use the same cells for computations every time we invoke
       this TM, as oracle). \\
-      Thus, instead of relativizing if we simply embed the TM for \family{TQBF},
-      we have a non-deterministic TM with the same language which still runs in
-      polynomial space.
+      Thus, instead of relativizing, if we simply embed the TM for
+      \namedlangset{TQBF}, we have a non-deterministic TM with the same language
+      which still runs in polynomial space.
     \end{proof}
 
     Therefore, we have
@@ -382,8 +405,7 @@
     $$
       \family{NTIME}(n^{2016}) \subseteq^1 \family{NSPACE}(n^{2016})
                                \subseteq^2 \family{DSPACE}(n^{4032})
-                               \subsetneq^3 \family{DSPACE}(n^{4033})
-                               \subseteq^4 \family{PSPACE}
+                               \subsetneq^3 \family{PSPACE}
     $$
     Each containment relation is numbered to uniquely identify it in the
     explanation below:
@@ -393,9 +415,8 @@
 
     $\subseteq^2$ holds directly because of Savitch's Theorem \cite{SAVITCH1970}.
 
-    $\subsetneq^3$ holds directly because of Space Hierarchy Theorem.
-
-    $\subseteq^4$ holds by the definition of \family{PSPACE}.
+    $\subsetneq^3$ holds because of Space Hierarchy Theorem (and the
+    definition of \family{PSPACE}).
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
