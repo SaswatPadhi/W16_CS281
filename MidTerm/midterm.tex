@@ -221,7 +221,8 @@
     For simplicity, we assume that most standard operations like comparisons,
     exponentiation, base conversion etc. are already defined efficiently.
 
-    The existence of $\machineM$ proves that $\lfloor n^\frac{2016}{2015} \rfloor$ is time-constructible.
+    The existence of $\machineM$ proves that
+    $\lfloor n^\frac{2016}{2015} \rfloor$ is time-constructible.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -526,7 +527,37 @@
         of size $n$ in space $O(n^{1/2016})$? Prove your answer.
   %-----------------------------------------------------------------------------
   \begin{proof}[Solution]
-    \todo{solve}
+    Suppose there exists such an algorithm.
+    Then, $\namedlangset{TQBF} \in \family{SPACE}(n^{1/2016})$.
+
+    Consider any
+    $\langL \in \family{PSPACE} \textnormal{\textbackslash} \family{SPACE}(n)$.
+    As \namedlangset{TQBF} is \reduce{p}{}-complete for \family{PSPACE},
+    $$
+      \langL \reduce{p}{} \namedlangset{TQBF} \quad \ie \quad
+      \forall x \in \allstrings: \quad
+      x \in \langL \Longleftrightarrow
+      p_\langL^\namedlangset{TQBF}(x) \in \namedlangset{TQBF}
+    $$
+    where $p_\langL^\namedlangset{TQBF}$ is a poly-time transformation from an
+    instance of \langL, to that of \namedlangset{TQBF}. \\
+    Without loss of generality, we can assume
+    $p_\langL^\namedlangset{TQBF} \in O(n^k)$, for some $k \in \namedset{N}$.
+
+    Because it's a poly-time computation,
+    the size of $p_\langL^\namedlangset{TQBF}(x)$ can be at most polynomial
+    in the size of $x$ \ie $|p_\langL^\namedlangset{TQBF}(x)| \leq |x|^k$. Note
+    that the transformation itself happens in at most log-space, although the
+    size of the transformed instance is polynomial. \\
+    Upon checking with \namedlangset{TQBF} now, we can decide if $x \in \langL$,
+    in space $O(|x|^{k/2016})$.
+
+    Since by our assumption, $\langL \not\in \family{SPACE}(n)$, it must be true
+    that $k/2016 > 1$ \ie $k > 2016$.
+
+    Since $k$ can range over \namedset{N} \ie the poly-time reduction can result
+    in arbitrarily large polynomials;
+    $\namedlangset{TQBF} \not \in \family{SPACE}(n^{1/2016})$.
   \end{proof}
 \end{enumerate}
 
