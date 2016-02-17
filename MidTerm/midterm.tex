@@ -9,6 +9,7 @@
 \usepackage[mathscr]{eucal}
 \usepackage{cancel}
 \usepackage{scribe}
+\usepackage{enumitem}
 
 \newcommand {\namedset}[1]     {\ensuremath{\mathbb{#1}}}
 \newcommand {\langset}[1]      {\ensuremath{\mathcal{#1}}}
@@ -32,20 +33,16 @@
 \newenvironment{turing}[2] {
   \smallskip
   \indpar{2}
-  \textbf{Machine:} #1\\
-  \textbf{Input:} $#2$\\[5pt]
-  \textbf{begin}
+  \textit{Machine:} #1\\
+  \textit{Input:} $#2$\\[5pt]
+  \texttt{begin}
   \parskip=0pt
   \indpar{3}
 }{
   \indpar{2}
-  \textbf{end}
+  \texttt{end}
   \par\medskip
 }
-
-\renewcommand {\theenumi}{\textbf{\arabic{enumi}}}
-\renewcommand {\labelenumi}{\theenumi}
-\setlength \labelsep {\dimexpr\labelsep + 1em\relax}
 
 \newcommand{\ie}{\textnormal{i.e. }}
 \newcommand{\todo}[1]{{\large \textbf{TODO: #1}}}
@@ -62,7 +59,7 @@
 \makeheader {Saswat Padhi} {February 17, 2016}
             {CS 281A -- Computability and Complexity}
 
-\begin{enumerate}
+\begin{enumerate}[labelsep=2.5em, label=\textbf{\arabic{enumi}}]
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Q1
   \item Given languages $\langL_1$, $\langL_2$, $\langL_3 \in \family{NP}$,
@@ -159,10 +156,72 @@
         is \term{time-constructible}.
   %-----------------------------------------------------------------------------
   \begin{proof}
-    We need to show that, there exists some TM \machineM,
-    which maps $1^n \mapsto 1^{\lfloor n^{2016/2015} \rfloor}$
-    in time $O(\lfloor n^{\frac{2016}{2015}} \rfloor)$.
-    \todo{solve}
+    We show that some TM \machineM, maps
+    $1^n \mapsto 1^{\lfloor n^{2016/2015} \rfloor}$
+    in time $O(\lfloor n^{\frac{2016}{2015}} \rfloor)$. \\
+
+    \textsc{Rough Idea \hfill Computation Time}
+    \begin{enumerate}[labelsep=1em, nolistsep]
+      \item Convert $n$ to binary. \hfill $O(B(n))$
+      \item Compute and store $N = n^{2016}$ \hfill
+            $O(2016 {\cdot} M(n)) = O(M(n))$
+      \item Find $c$, s.t. $c^{2015} \leq N < (c+1)^{2015}$ \hfill
+            $O(4030i {\cdot} I(n) {\cdot} M(n))
+            = O(i {\cdot} I(n) {\cdot} M(n))$
+    \end{enumerate}
+    \begin{flalign*}
+      \textnormal{here, }
+      B(n) &= n & \textnormal{(unary to binary conversion)}\\
+      M(n) &= O(\log^2 n)
+           & \textnormal{(multiplications of 2 $O(\log n)$-bit numbers)} \\
+      i &=\; ??? & \textnormal{(number of iterations for searching $c$)}\\
+      I(n) &=\; ???
+           & \textnormal{(computation time per iteration,
+                          and for comparisons with $N$)}
+    \end{flalign*}
+    $i$ and $I(n)$ would depend on our search strategy for $c$.
+
+    Starting with a simple linear search,
+    $i = \lfloor n^\frac{2016}{2015} \rfloor$ and
+    $I(n) = O(\log n)$ because in each iteration, we only increment $c$ and make
+    $2$ comparisons $N$. \\
+    But then the computation time for the last step (c), becomes
+    $O(\lfloor n^\frac{2016}{2015} \rfloor \log^3 n)$,
+    which is beyond the required limit $O(\lfloor n^\frac{2016}{2015} \rfloor)$.
+
+    We thus need a smarter search strategy. \\
+    Observe that the function $n^\frac{2016}{2015}$ is monotonic. So we can use
+    binary search for $c$! But we need to find the bounds for our binary search.
+    It is easy to  observe that $n < n^\frac{2016}{2015} < n^2$. Thus, our
+    bounds for searching $c$ are $[n, n^2]$.
+
+    In that case, $i = \lfloor \log n^2 \rfloor$ and $I(n) = O(\log n)$ again
+    because in each iteration we compute $c$ in $O(\log n)$ time and make
+    \textit{constant} number of comparisons. The running time now becomes
+    $O(n) + O(\log^2 n) + O(\log \lfloor n^2 \rfloor \log^3 n) = O(n)$,
+    which is fast enough!
+
+    Concretely, the TM would look (somewhat) like:
+    \begin{turing}{\machineM}{1^n}
+      convert $n$ (from unary) to binary \\
+      exponentiate $n$ to $2016$ (referred as $N$ henceforth) \\
+
+      set $l := n$ ; $r := n^2$ \\
+      while $l \neq r$
+        \indpar{4}
+        set $c := (l+r)/2$ \\
+        if $c \leq N$ then $l := c$ \\
+        if $c \geq N$ then $r := c$ \\
+
+      \indpar{3}
+      convert $c$ (from binary) to unary \\
+      erase everything except $c$ and halt
+    \end{turing}
+
+    For simplicity, we assume that most standard operations like comparisons,
+    exponentiation, base conversion etc. are already defined efficiently.
+
+    The existence of $\machineM$ proves that $\lfloor n^\frac{2016}{2015} \rfloor$ is time-constructible.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
