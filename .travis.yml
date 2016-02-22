@@ -8,9 +8,11 @@ addons:
     - pgf
     - latexmk
     - texlive
+    - texlive-latex-extra
 
 script:
 - cd Lec7 && latexmk && cd ..
+- cd MidTerm && latexmk && cd ..
 
 notifications:
   email: false
@@ -21,6 +23,7 @@ deploy:
     secure: qPtc2JICZvn0zy7lRb6muenl2cAs44ShzwBuwMXhG5m5nEgClhKEvFCH4PzYeVwct5l1OKHtE4AlQo1PvTC0Ujjg8AgU7TbbhU38AcLu1Gh6X2Uh8Ye2fkRc3ikTQXZwU0EF6jaDKWJiV4/rvS/VQ27LnsXQKyclC0cOeWU+Pll92RMMmIubDWUFDY45tYLeTg9CGmTIUgwvhkHbbOAWLe2RvUva9WOZNz32sPbnkEM/BvENsC8lnbyfynrSz/Z48XeMu0EdW8ACP+LT3FfT1+463eiPYtLCwrTv2gqutH6RNpu9AgdWvXibujTfRhDNEfuOsKO0Ynt0KptRZgmUH54zKMLlsdZ3zo0Y3qNJ2CwN4HbEpVWwYrDb9PqzD0VvO4n4a7INAm1OfPECtqkKo5i/WfAg4xQqHX9Uv9sjSJ5wR2YCe3LJrxMYG06O3zRK8HMK7xcTM/hhazJ+KNSgUvaiW0dAcEq9h9dXMbkUVbrpBawXD4AtY0JQ0fSMhwLzydii5xRylteFUFfpnGXgGi6j2IuDcvZFJS479fMR0/tOYvRCb1wjs5jvMMVq111U+y9o05SUk6H8b4kjUsTljKf/rsWPXSCAUGCjQoy7pPTSsTaoRJZYu4+tqNugoWwCJcTAy5Hi2DjhVyozrsrTLHXZeErn7wR3XGd+RkZIsXs=
   file:
     - "Lec7/lec7.pdf"
+    - "MidTerm/midterm.pdf"
   on:
     tags: true
     repo: SaswatPadhi/W16_CS281

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Remove local and remote tag
-git tag -d current_pdfs
-git push origin :current_pdfs
+git tag -d PDFs
+git push origin :PDFs
 
 # Create new tag (replace old one)
-git tag -f current_pdfs
+git tag -f PDFs
 
 # Push commits & tags
 git push && git push --tags
