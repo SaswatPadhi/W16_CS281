@@ -56,6 +56,7 @@
 
 %%% Complexity Classes
 \newcommand {\PTime}  {\family{P}}
+\newcommand {\PH}     {\family{PH}}
 \newcommand {\IP}     {\family{IP}}
 \newcommand {\NP}     {\family{NP}}
 \newcommand {\RP}     {\family{RP}}
@@ -137,7 +138,7 @@
 
       Further, \machine{H} halts with $1$ on input $\langle \alpha, x \rangle$
       if and only if \machine{U} halts on the same input i.e. $\machineM_\alpha$
-      halts on $x$. In otherwords, \machine{H} decides \namedlangset{Halt}.
+      halts on $x$. In other words, \machine{H} decides \namedlangset{Halt}.
     \end{proof}
 
     Hence, we have shown that using \machine{V}; we can \term{decide}
@@ -184,14 +185,20 @@
     If \namedlangset{TQBF} has a polynomial-time randomized algorithm,
     $\namedlangset{TQBF} \in \BPP$.
 
-    By \namethm{Sipser-G\'{a}cs}, we know that
+    Due to \namethm{Sipser-G\'{a}cs-Lautemann}\cite{Lautemann1983}:
     $\BPP \subseteq \FSigma_2 \cap \FPi_2$.
-    Thus, $\namedlangset{TQBF} \in \FSigma_2$.
+    Then, $\namedlangset{TQBF} \in \FSigma_2$.
 
     But we know that \namedlangset{TQBF} is \complete{p}{} for \PSPACE. So, any
     problem $\langset{P} \in \PSPACE$ can be reduced to \namedlangset{TQBF} in
-    polynomial-time (and thus would use only polynomial-space during reduction).
-    This implies, $\PSPACE \subseteq \FSigma_2$!
+    polynomial-time. Since $\PH \subseteq \PSPACE$, the reduction also holds for
+    any problem $\langset{P} \in \PH$.
+
+    But since we have assumed that $\namedlangset{TQBF} \in \FSigma_2$, we have
+    actually shown that: \\
+    $$ \forall \langset{P} \in \PH: \langset{P} \in \FSigma_2 $$
+    In other words, the polynomial hierarchy \PH\ collapses to the $2^\text{nd}$
+    level.
   \end{proof}
 
 
