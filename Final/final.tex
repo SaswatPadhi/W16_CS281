@@ -1,0 +1,233 @@
+\documentclass[usletter]{article}
+\usepackage[margin=1.5in]{geometry}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{cancel}
+\usepackage[mathscr]{eucal}
+
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\usepackage{scribe}
+
+\newcommand {\namedset}[1]     {\ensuremath{\mathbb{#1}}}
+\newcommand {\langset}[1]      {\ensuremath{\mathcal{#1}}}
+\newcommand {\machine}[1]      {\ensuremath{\mathscr{#1}}}
+\newcommand {\langfunc}        {\ensuremath{\mathfrak{L}}}
+\newcommand {\namedlangset}[1] {\ensuremath{\textnormal{\textsc{#1}}}}
+\newcommand {\family}[1]       {\ensuremath{\mathsf{#1}}}
+
+\newcommand {\term}[1]      {\textit{#1}}
+\newcommand {\namethm}[1]   {\term{#1} Theorem}
+\newcommand {\usingthm}[1]  {(Using \namethm{#1})}
+
+\newcommand {\reduce}[2]    {\ensuremath{\preceq_{#1}^{#2}}}
+\newcommand {\complete}[2]  {\ensuremath{\reduce{#1}{#2}     %% ugly hack ahead!
+                                         \hspace*{-4pt}\textnormal{-complete}}}
+
+\newcommand {\indpar}[1]   {
+  \par\leftskip=#1em
+  \noindent\ignorespaces
+}
+\newenvironment{turing}[2] {
+  \smallskip
+  \indpar{2}
+  \textit{Machine:} #1\\
+  \textit{Input:} $#2$\\[5pt]
+  \texttt{begin}
+  \parskip=0pt
+  \indpar{3}
+}{
+  \indpar{2}
+  \texttt{end}
+  \par\medskip
+}
+
+\newcommand{\ie}{\textnormal{i.e. }}
+\newcommand{\todo}[1]{{\large \textbf{TODO: #1}}}
+
+%%% Defaults for languages and machines
+\newcommand {\langL}          {\langset{L}}
+\newcommand {\machineM}       {\machine{M}}
+%%%
+
+%%% Complexity Classes
+\newcommand {\PTime}  {\family{P}}
+\newcommand {\IP}     {\family{IP}}
+\newcommand {\NP}     {\family{NP}}
+\newcommand {\RP}     {\family{RP}}
+\newcommand {\BPP}    {\family{BPP}}
+\newcommand {\PSPACE} {\family{PSPACE}}
+\newcommand {\FPi}    {\family{\Pi}}
+\newcommand {\FSigma} {\family{\Sigma}}
+%%%
+
+\begin{document}
+
+\makeheader {Saswat Padhi} {March 18, 2016}
+            {CS 281A -- Computability and Complexity}
+
+\begin{enumerate}[labelsep=2.5em, label=\textbf{\arabic{enumi}}]
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q1
+  \item A language $\langL$ is \term{Turing-recognizable} if there is a Turing
+        machine that halts if and only if the input is in \langL. Prove for an
+        explicit language that it is not Turing-recognizable.
+  %-----------------------------------------------------------------------------
+  \begin{proof}[Intuition]
+    We know that problem \namedlangset{Halt} is \term{undecidable}. So, at least
+    one of \namedlangset{Halt}, or $\overline{\namedlangset{Halt}}$ is not
+    Turing-recognizable.
+    But \namedlangset{Halt} is. So, $\overline{\namedlangset{Halt}}$ must not be!
+  \end{proof}
+  \begin{proof}
+    Consider the complement language of \namedlangset{Halt}:
+    $$ \overline{\namedlangset{Halt}}
+    = \{ \langle \alpha, x \rangle \mid
+         \machineM_\alpha \text{ never halts on } x \} $$
+    We would prove that $\overline{\namedlangset{Halt}}$ is not
+    Turing-recognizable.
+
+    We begin by demonstrating that \namedlangset{Halt} is indeed
+    Turing-recognizable.
+    \begin{claim}\namedlangset{Halt} is Turing-recognizable.\end{claim}
+    \begin{proof}
+      Consider a universal TM \machine{U}. \\
+      By construction, \machine{U} halts on an input $\langle \alpha, x \rangle$
+      if and only if $\machineM_\alpha$ halts on $x$; because \machine{U} just
+      simulates $\machineM_\alpha$ with at most a logarithmic time overhead.
+
+      Clearly, \machine{U} thus \term{recognizes} \namedlangset{Halt}.
+    \end{proof}
+
+    \begin{assumption}
+      For the sake of contradiction; assume the existence of a TM \machine{V}
+      which recognizes $\overline{\namedlangset{Halt}}$ i.e. \machine{V} halts if
+      and only if $\machineM_\alpha$ never halts on $x$.
+    \end{assumption}
+
+    Now consider the following TM, which we can construct using \machine{U} and
+    \machine{V}:
+    \begin{turing}{\machine{H}}{\langle  \alpha, x \rangle}
+      simulate next step of \machine{U} on $\langle  \alpha, x \rangle$,
+      halt with $1$ if \machine{U} halted. \\
+      simulate next step of \machine{V} on $\langle  \alpha, x \rangle$,
+      halt with $0$ if \machine{V} halted. \\
+      repeat the above again
+    \end{turing}
+
+    \begin{claim}
+      The TM \machine{H} \term{decides} \namedlangset{Halt}.
+    \end{claim}
+    \begin{proof}
+      It is easy to see that \machine{H} halts for all inputs. Consider any
+      input $\langle \alpha, x \rangle$. Then one of the following must hold:
+      \begin{itemize}
+        \item $\machineM_\alpha$ halts on on $x$, then \machine{U} must
+          eventually halt. \\
+          Thus \machine{H} must halt with $1$.
+        \item $\machineM_\alpha$ never halts on $x$, then (\machine{U} never
+          halts and) \machine{V} must eventually halt. \\
+          Thus \machine{H} must halt with $0$.
+      \end{itemize}
+      Therefore, \machine{H} must eventually halt, in any case.
+
+      Further, \machine{H} halts with $1$ on input $\langle \alpha, x \rangle$
+      if and only if \machine{U} halts on the same input i.e. $\machineM_\alpha$
+      halts on $x$. In otherwords, \machine{H} decides \namedlangset{Halt}.
+    \end{proof}
+
+    Hence, we have shown that using \machine{V}; we can \term{decide}
+    \namedlangset{Halt} -- which is \term{undecidable}! \\
+    Then our assumption regarding the existence of such a TM \machine{V} which
+    recognizes $\overline{\namedlangset{Halt}}$ must be false.
+
+    Therefore, $\overline{\namedlangset{Halt}}$ is not
+    \term{Turing-recognizable}.
+  \end{proof}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q2
+  \item Give a polynomial-time algorithm for determining whether a given 2-CNF
+        formula is satisfiable.
+  %-----------------------------------------------------------------------------
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q3
+  \item Let \langL\ be any \NP-complete language. Prove that $\langL \in \BPP$,
+        if and only if $\langL \in \RP$.
+  %-----------------------------------------------------------------------------
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q4
+  \item Prove that there is a real number $0 < p < 1$ with the following
+        property: given access to a coin with bias $p$, a randomized Turing
+        machine can decide an undecidable language in polynomial time. By
+        \textit{access} to the coin is meant the ability to receive any desired
+        number of random bits $X_1, X_2, X_3 ... \in \{0,1\}$, each being an
+        independent random variable with expectation $p$.
+  %-----------------------------------------------------------------------------
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q5
+  \item Prove that the polynomial hierarchy collapses if \namedlangset{TQBF} has
+        a polynomial-time \textit{randomized} algorithm.
+  %-----------------------------------------------------------------------------
+  \begin{proof}
+    If \namedlangset{TQBF} has a polynomial-time randomized algorithm,
+    $\namedlangset{TQBF} \in \BPP$.
+
+    By \namethm{Sipser-G\'{a}cs}, we know that
+    $\BPP \subseteq \FSigma_2 \cap \FPi_2$.
+    Thus, $\namedlangset{TQBF} \in \FSigma_2$.
+
+    But we know that \namedlangset{TQBF} is \complete{p}{} for \PSPACE. So, any
+    problem $\langset{P} \in \PSPACE$ can be reduced to \namedlangset{TQBF} in
+    polynomial-time (and thus would use only polynomial-space during reduction).
+    This implies, $\PSPACE \subseteq \FSigma_2$!
+  \end{proof}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q6
+  \item Two players take turns choosing vertices from a directed graph $G$, such
+        that the $i^\text{th}$ vertex chosen $v_i$, is distinct from $v_0, v_1,
+        v_2, ..., v_{i-1}$ and reachable from $v_{i-1}$ by an edge. When a
+        player has no vertices to choose from, the game ends and that player
+        loses. On input a directed graph $G$, give a polynomial-space algorithm
+        for deciding whether the player who starts the game can force a win,
+        regardless of his opponent's choices. \\
+        \textit{Comment:} This problem makes it clear why \PSPACE\ is often
+        regarded as the class of adversarial games with two players.
+  %-----------------------------------------------------------------------------
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q7
+  \item Prove that increasing the completeness parameter in the definition of
+        \IP\ from $\frac{2}{3}$ to $1$, does not change this complexity class.
+        What class do we get if we keep the completeness unchanged but increase
+        the soundness from $\frac{2}{3}$ to $1$?
+  %-----------------------------------------------------------------------------
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Q8
+  \item Prove that with Hadamard coding, it is in general impossible to recover
+        the original codeword, if the received transmission is corrupted in
+        $25\%$ or more of the coordinates.
+  %-----------------------------------------------------------------------------
+
+\end{enumerate}
+
+\bibliographystyle{abbrv}
+\bibliography{final}
+
+\end{document}
