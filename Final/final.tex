@@ -46,8 +46,8 @@
   \par\medskip
 }
 
-\newcommand{\ie}{\textnormal{i.e. }}
-\newcommand{\todo}[1]{{\large \textbf{TODO: #1}}}
+\newcommand {\ie}      {\textnormal{i.e. }}
+\newcommand {\todo}[1] {{\large \textbf{TODO: #1}}}
 
 %%% Defaults for languages and machines
 \newcommand {\langL}          {\langset{L}}
@@ -153,9 +153,93 @@
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Q2
-  \item Give a polynomial-time algorithm for determining whether a given 2-CNF
-        formula is satisfiable.
+\item Give a polynomial-time algorithm for determining whether a given
+      \term{2-CNF} formula is satisfiable.
   %-----------------------------------------------------------------------------
+  \begin{proof}[Intuition]
+    In case of \term{2-CNF}, assigning truth value to one literal in a
+    clause, \textit{forces} a truth value on the other literal.
+  \end{proof}
+  \begin{proof}
+    Consider an arbitrary \term{2-CNF} formula $\Delta$ defined on variables
+    $x_1, x_2, \ldots, x_n$. \\
+    We can rewrite any clause $(l_i \vee l_j)$, where $l_i$ and $l_j$ are
+    literals; as $(\neg l_i \Rightarrow \l_j)$.
+
+    Now consider a graph with each literal $l_k$ being a vertex and each edge
+    being an \textit{implication}. For each clause $(l_i \vee l_j)$, we add
+    edges $\overline{l_i} \longrightarrow l_j$ and
+    $\overline{l_j} \longrightarrow l_i$, where $\overline{l_k}$ indicates the
+    complement literal of $l_k$. So, construction of this graph can be done in
+    time $O(p)$, where $p$ is the number of clauses in $\Delta$; but it is
+    bounded by $O(n^2)$.
+
+    Let's also represent a directed path over this graph from $l_i$ to $l_j$, as
+    $l_i \rightsquigarrow l_j$. Since our graph edges model implications,
+    $l_i \rightsquigarrow l_j$ would indicate $l_i \Rightarrow l_j$, due to the
+    transitivity of implications.
+
+    Note that a path $\overline{l_i} \rightsquigarrow l_i$ would force the
+    assignment $l_i = 1$. Then we would face a contradiction for assigning a
+    variable $x_i$ if:
+    $$
+      (x_i \rightsquigarrow \neg x_i) \wedge (\neg x_i \rightsquigarrow x_i)
+      \qquad \text{as this would require,}
+      \quad (x_i = 1) \wedge (\neg x_i = 1)
+    $$
+
+    We know that checking $l_i \rightsquigarrow l_j$ on a graph with $O(n)$
+    vertices, is in polynomial-time. For example, a simple breadth-first-search
+    would run in time $O(|V|+|E|) = O(n^2)$.
+
+    So our algorithm could simply check the following: \\
+    For each variable $x_k$ in $x_1, x_2, \ldots, x_n$; run two queries on the
+    graph - check if $x_k \rightsquigarrow \neg x_k$ and
+    $\neg x_k \rightsquigarrow x_k$. If both queries are satisfied for any
+    variable $x_k$, then $\Delta \not\in \namedlangset{2-SAT}$. The algorithm
+    would run in time $O(2 n \cdot n^2) = O(n^3)$. \\
+    The soundness of this algorithm is a direct observation: if the algorithm
+    finds some variable $x_k$ such that $x_k \rightsquigarrow \neg x_k$ and
+    $\neg x_k \rightsquigarrow x_k$; then there exists no assignment for $x_k$,
+    and thus $\Delta \not\in \namedlangset{2-SAT}$.
+
+    \begin{claim}[Completeness]
+      If $\Delta \not\in \namedlangset{2-SAT}$, the algorithm would eventually
+      find some $x_i$ such that $x_i \rightsquigarrow \neg x_i$ and
+      $\neg x_i \rightsquigarrow x_i$.
+    \end{claim}
+    \begin{proof}
+      If $\Delta \not\in \namedlangset{2-SAT}$, then there must be at least one
+      variable $x_i$ which can neither be assigned $0$, nor $1$; without
+      violating at least one of the clauses.
+
+      For the sake of contradiction, now assume that our algorithm does not
+      detect at least one of these paths: $x_i \rightsquigarrow \neg x_i$ or
+      $\neg x_i \rightsquigarrow x_i$ for this variable $x_i$. We will show that
+      then there exists an assignment for $x_i$, which satisfies $\Delta$.
+
+      For each variable $x_k$, we do the following:
+      \begin{enumerate}
+        \item if $x_k \rightsquigarrow \neg x_k$ was detected, assign $x_k = 0$.
+        \item if $\neg x_k \rightsquigarrow x_k$ was detected, assign $x_k = 1$.
+        \item if neither was detected, assign $x_k$ to $0$ or $1$ arbitrarily
+      \end{enumerate}
+      By our assumption, for no variable both cases (1) and (2) would be
+      applicable.
+
+      Now, since each edge of the graph corresponds to a clause in $\Delta$,
+      this assignment is guaranteed to satisfy every clause, thus making it a
+      satisfying assignment for $\Delta$!
+
+      This contradicts the fact that $\Delta \not\in \namedlangset{2-SAT}$. \\
+      The only reason could be our mistake in the assumption that our algorithm
+      does not detect an inconsistency for variable $x_i$ --- which must be
+      false.
+    \end{proof}
+
+    So we can decide if $\Delta \in \namedlangset{2-SAT}$, in time
+    $O(n^2 + n^3) = O(n^3)$; and thus $\namedlangset{2-SAT} \in \PTime$.
+  \end{proof}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
