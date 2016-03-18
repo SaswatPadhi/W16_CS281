@@ -296,7 +296,7 @@
     majority of $k$ independent runs of \machine{B} would be wrong with
     probability only $2e^{-k/18}$. For simplicity of calculations, let us
     over-estimate this error as $e^{-k/2}$ (note that $e^{-k/2} > 2e^{-k/18}$
-    for all integral values of $k > 1$).\\
+    for all integral values of $k > 0$).\\
     Now if we use $k$ runs instead of one run per variable, we would have error
     rate of \machine{R} $\leq \frac{n}{e^{k/2}}$. This quantity can be made
     $\leq \frac{1}{3}$ as required to be in \RP; by choosing a suitable $k$,
@@ -355,7 +355,7 @@
         property: given access to a coin with bias $p$, a randomized Turing
         machine can decide an undecidable language in polynomial time. By
         \textit{access} to the coin is meant the ability to receive any desired
-        number of random bits $X_1, X_2, X_3 ... \in \{0,1\}$, each being an
+        number of random bits $X_1, X_2, X_3 \ldots \in \{0,1\}$, each being an
         independent random variable with expectation $p$.
   %-----------------------------------------------------------------------------
 
@@ -469,7 +469,53 @@
         What class do we get if we keep the completeness unchanged but increase
         the soundness from $\frac{2}{3}$ to $1$?
   %-----------------------------------------------------------------------------
+  \begin{proof}[Intuition]
+    The completeness claim is easy to see because $\IP = \PSPACE$ as discussed
+    in class. For the soundness = $1$ case, the verifier would behave like a
+    deterministic verifier; which should essentially reduce the system to \NP.
+  \end{proof}
+  \begin{proof}
+    Fist we show that the class \IP\ is unaffected by an increase to the
+    completeness parameter. Note that, since we have $\IP = \PSPACE$ as shown in
+    the lecture:
+    $$
+    \forall \langL \in \IP : \exists f :
+    (\forall x : x \in \langL \Longleftrightarrow f(x) \in \namedlangset{TQBF})
+    $$
+    where $f$ is a polynomial-time transformation from an instance of \langL\ to
+    \namedlangset{TQBF}.
 
+    In the lecture, we discussed an interactive system for \namedlangset{TQBF}
+    with completeness = $1$; then an interactive system for \langL\ with
+    completeness = $1$ immediately follows due to the transformation.
+
+    Now we prove the following theorem for increasing soundness of \IP\ systems
+    to $1$.
+    \begin{theorem}
+      If a language $\langL \in \IP$ with a soundness of $1$; then
+      $\langL \in \NP$.
+    \end{theorem}
+    \begin{proof}
+      If we have a proof system for \langL, with soundness = $1$; then we show a
+      way to build an \NP\ algorithm for \langL. Let's call the prover in the
+      system as \machine{P} and the verifier as \machine{V}. We show below that
+      \machine{V} is also a verifier in \NP.
+
+      First, consider any instance $x \not\in \langL$. \\
+      Since the system is sound; \machine{P} can never force \machine{V} to
+      accept, regardless of the random bits chosen. This is as required by \NP.
+
+      Now, consider any instance $x \in \langL$. \\
+      By the previous theorem; there is an \IP\ system for \langL, which must
+      accept $x$ with probability $1$. This indicates that, \textit{regardless}
+      of the random bits chosen, the system accepts $x$ -- in other words,
+      \machine{P} always ensures acceptance of $x$ on \machine{V}. \\
+      Therefore, we can simply fix an arbitrary random string for \machine{V};
+      and expect all the answers from \machine{P} together as a certificate ---
+      such a certificate would exist as argued. The verifier thus behaves as a
+      verifier in \NP\ now!
+    \end{proof}
+  \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Q8
