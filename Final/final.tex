@@ -8,6 +8,7 @@
 \usepackage{cancel}
 \usepackage[mathscr]{eucal}
 
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage{enumitem}
 \usepackage{graphicx}
 
@@ -160,8 +161,8 @@
     In case of \term{2-CNF}, assigning truth value to one literal in a
     clause, \textit{forces} a truth value on the other literal.
   \end{proof}
-  \begin{proof}
-    Consider an arbitrary \term{2-CNF} formula $\Delta$ defined on variables
+  \begin{proof}[Solution]
+    Consider a \term{2-CNF} formula $\Delta$ defined on variables
     $x_1, x_2, \ldots, x_n$. \\
     We can rewrite any clause $(l_i \vee l_j)$, where $l_i$ and $l_j$ are
     literals; as $(\neg l_i \Rightarrow \l_j)$.
@@ -333,8 +334,18 @@
 
     As \machine{R} now has a false-negative rate $\leq \frac{n}{3^k} \leq
     \frac{n}{3n} = \frac{1}{3}$; it establishes that
-    $\namedlangset{SAT} \in \RP$.
+    $\namedlangset{SAT} \in \RP$; starting with the assumption that
+    $\namedlangset{SAT} \in \BPP$. \\
+    And since $\namedlangset{SAT} \in \RP$, we would have the same for any
+    \NP-complete problem.
   \end{proof}
+  \begin{remark}
+    The above proof implies : $\NP \subseteq \RP$. But in fact $\NP = \RP$! \\
+    This is because $\RP \subseteq \NP$, as discussed in class -- a problem
+    being in \RP, shows that it has at least \textit{exponentially} many
+    certificates; which is a subset of problems with at least \textit{one}
+    certificate (\NP).
+  \end{remark}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -386,6 +397,68 @@
         \textit{Comment:} This problem makes it clear why \PSPACE\ is often
         regarded as the class of adversarial games with two players.
   %-----------------------------------------------------------------------------
+  \begin{proof}[Intuition]
+    For the first player to be able to force a win, at any point in the game --
+    there should \textit{exist} a move for him/her; which allows him to force a
+    win, \textit{for all} possible moves of the second player. That sounds like
+    \namedlangset{TQBF}!
+  \end{proof}
+  \begin{proof}[Solution]
+    Consider the following recursive algorithm, similar to one for
+    \namedlangset{TQBF}:
+
+    \begin{minipage}{\linewidth}
+    \begin{function}[H]
+      \caption{FirstPlayerWins()}
+      \DontPrintSemicolon
+      \SetKwFunction{Union}{Union}\SetKwFunction{RemoveVertices}{RemoveVertices}
+
+      \KwIn   {A graph $G$ \tcc*[r]{$V_G$ and $E_G$ are vertex and edge sets}}
+      \KwOut  {$0$ if the first player can force a win, $1$ otherwise}
+
+      \Begin{
+        \For{\textnormal{each vertex} $x_i \in V_G$ \tcc*[r]{P1 chooses $x_i$}}{
+          $flag_{won} \longleftarrow 1$ \;
+          \For{\textnormal{each vertex $x_j$ s.t. $(x_i, x_j) \in E_G$}
+            \tcc*[r]{P2 chooses $x_j$}
+          } {
+            \If{$\FirstPlayerWins{\RemoveVertices{$G, \{x_i, x_j\}$}} = 0$}{
+              $flag_{won} \longleftarrow 0$ \tcc*[r]{could not force win}
+              break
+            }
+          }
+          \tcc*[r]{if player won for all choices of $x_j$}
+          \lIf{$flag_{won} = 1$}{\Return{$1$}}
+          \tcc*[r]{otherwise try next $x_i$}
+        }
+        \Return{$0$}
+      }
+    \end{function}
+    \end{minipage}
+
+    The call to function \texttt{RemoveVertices}, simply removes all supplied
+    vertices from the provided graph, along with all of their incoming and
+    outgoing edges.
+
+    Soundness and completeness of \texttt{FirstPlayerWins} are directly observed
+    since the algorithm explores all possible moves for both players.
+
+    We now show that \texttt{FirstPlayerWins} uses polynomial-space. \\
+    Let the space usage of \texttt{FirstPlayerWins} as a function of the
+    argument graph $G$ be $S(G)$. Since during each recursive call, we only
+    store $\langle G, x_i, x_j \rangle$ on the stack;
+    \begin{align*}
+      S(G) &= S(G') + |G| + 2
+           & G' = \text{\tt RemoveVertices}(G, \{x_i, x_j\}) \\
+           &= S(G') + O(n^2) & n = |V_G |
+    \end{align*}
+    Since we remove $2$ vertices from $G$ to obtain $G'$, the maximum depth of
+    recursion can be $\frac{n}{2}$. Now, unrolling the recursive relation
+    gives us $S(G) = O(n^3)$.
+
+    Therefore \texttt{FirstPlayerWins} runs in space, polynomial in size of
+    the input graph $G$.
+  \end{proof}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
