@@ -247,6 +247,94 @@
   \item Let \langL\ be any \NP-complete language. Prove that $\langL \in \BPP$,
         if and only if $\langL \in \RP$.
   %-----------------------------------------------------------------------------
+  \begin{proof}
+    Let \langL\ be an arbitrary \NP-complete language as stated. \\
+    Since $\RP \subseteq \BPP$ and \namedlangset{SAT} is \complete{p}{} for \NP,
+    it would be enough to prove that:
+    $$
+    \text{If } \namedlangset{SAT} \in \BPP
+    \text{, then } \namedlangset{SAT} \in \RP
+    $$
+    Per assumption, there must exist a randomized polynomial-time TM \machine{B}
+    which decides \namedlangset{SAT}, with error rate $\leq \frac{1}{3}$, with
+    $O(|x|^c)$ random bits for any input $x$.
+
+    We construct the following randomized, polynomial-time TM \machine{R}, which
+    \textit{uses} \machine{B} and decides \namedlangset{SAT}:
+    \begin{turing}
+          {\machine{R}}
+          {\langle x, r \rangle
+            \hfill x \text{ has } n \text{ variables: } v_0, v_2 \ldots v_{n-1}
+            \quad \text{and} \quad |r| = n|x|^{c+1}}
+      for $i$ = $0$ to $n-1$:
+        \indpar{4}
+        construct $x_i$ as $x$ with variable $v_i$ replaced by $0$ \\
+        construct $r_i$ as the substring of $r$ within
+          $[i \cdot |x|^{c+1}, (i+1) \cdot |x|^{c+1}]$ \\
+        simulate \machine{B} on input $\langle x_i, r_i \rangle$ \\
+        if simulation halts with $1$, assign $v_i \mapsto 0$ else
+          assign $v_i \mapsto 1$
+      \indpar{3}
+      if the assignment to $v_0, v_2, \ldots , v_{n-1}$ satisfies $x$,
+        output $1$ else output $0$
+    \end{turing}
+
+    The soundness of \machine{R} is a direct observation: due to the final check
+    \machine{R} would never accept an $x \not\in \namedlangset{SAT}$. Although,
+    \machine{R} might mistakenly declare an $x \in \namedlangset{SAT}$ as
+    \namedlangset{UNSAT}; due to the fact that the particular assignment of
+    $v_0, v_2, \ldots , v_{n-1}$ might not satisfy $x$.
+
+    Next determine the false negative rate for \machine{R}; which is required to
+    be $\leq \frac{1}{3}$, for \machine{R} to establish that
+    $\namedlangset{SAT} \in \RP$. Clearly \machine{R} be incorrect, if at least
+    $1$ of the simulations of \machine{B} turns out to be incorrect. The
+    probability of this happening is $\frac{n}{3}$, which is too high!
+
+    But we know that the error rate can be arbitrarily improved by running the
+    probabilistic machines multiple times, independently. The probability that
+    the majority of $k$ independent runs of \machine{B} is wrong is
+    $\frac{1}{3^k}$. \\
+    Now if we use $k$ runs instead of one run per variable, we would have error
+    rate of \machine{R} $\leq \frac{n}{3^k}$. This quantity can be made
+    $\leq \frac{1}{3}$ as required to be in \RP; by choosing a suitable $k$,
+    specifically $k \geq 1 + \log_3{n}$. The new construction of \machine{R}
+    would look like:
+    \begin{turing}
+          {\machine{R}}
+          {\langle x, r \rangle
+            \hfill x \text{ has } n \text{ variables: } v_0, v_2 \ldots v_{n-1}
+            \quad \text{and} \quad |r| = (n+1)\log_3{n}|x|^{c+1}}
+      $k := \log_3{n}$ \\
+      for $i$ = $0$ to $n-1$:
+        \indpar{4}
+        construct $x_i$ as $x$ with variable $v_i$ replaced by $0$ \\
+        $c_0 := 0 \quad c_1 := 0$ \\
+        for $j$ = $0$ to $k$:
+          \indpar{5}
+          construct $r_i$ as the substring of $r$ within
+            $[(ik+j-1) \cdot |x|^{c+1}, (ik+j) \cdot |x|^{c+1}]$ \\
+          simulate \machine{B} on input $\langle x_i, r_i \rangle$ \\
+          if simulation halts with $1$, increment $c_0$ else increment $c_1$
+        \indpar{4}
+        if $c_0 > c_1$, $v_i \mapsto 0$ else assign $v_i \mapsto 1$
+      \indpar{3}
+      if the assignment to $v_0, v_2, \ldots , v_{n-1}$ satisfies $x$,
+        output $1$ else output $0$
+    \end{turing}
+
+    Note that, \machine{R} still runs in polynomial-time. Specifically it is
+    $O(n\log{n}T_\machine{B}(n))$; where $T_\machine{B}$ is the running time of
+    \machine{B}; since computing $k$, constructing $x_i$ and $r_i$ and checking
+    if the assignments satisfy $x$ --- can all be done in smaller polynomials of
+    $n$. Now, since we know that \machine{B} is an algorithm in \BPP,
+    $T_\machine{B}$ is polynomial-time; which establishes that \machine{R} runs
+    in polynomial-time.
+
+    As \machine{R} now has a false-negative rate $\leq \frac{n}{3^k} \leq
+    \frac{n}{3n} = \frac{1}{3}$; it establishes that
+    $\namedlangset{SAT} \in \RP$.
+  \end{proof}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
