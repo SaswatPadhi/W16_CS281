@@ -292,21 +292,22 @@
     $1$ of the simulations of \machine{B} turns out to be incorrect. The
     probability of this happening is $\frac{n}{3}$, which is too high!
 
-    But we know that the error rate can be arbitrarily improved by running the
-    probabilistic machines multiple times, independently. The probability that
-    the majority of $k$ independent runs of \machine{B} is wrong is
-    $\frac{1}{3^k}$. \\
+    But as discussed in class, using the Chernoff bound, we know that the
+    majority of $k$ independent runs of \machine{B} would be wrong with
+    probability only $2e^{-k/18}$. For simplicity of calculations, let us
+    over-estimate this error as $e^{-k/2}$ (note that $e^{-k/2} > 2e^{-k/18}$
+    for all integral values of $k > 1$).\\
     Now if we use $k$ runs instead of one run per variable, we would have error
-    rate of \machine{R} $\leq \frac{n}{3^k}$. This quantity can be made
+    rate of \machine{R} $\leq \frac{n}{e^{k/2}}$. This quantity can be made
     $\leq \frac{1}{3}$ as required to be in \RP; by choosing a suitable $k$,
-    specifically $k \geq 1 + \log_3{n}$. The new construction of \machine{R}
+    specifically $k \geq 2\log(3n)$. The new construction of \machine{R}
     would look like:
     \begin{turing}
           {\machine{R}}
           {\langle x, r \rangle
             \hfill x \text{ has } n \text{ variables: } v_0, v_2 \ldots v_{n-1}
-            \quad \text{and} \quad |r| = (n+1)\log_3{n}|x|^{c+1}}
-      $k := \log_3{n}$ \\
+            \quad \text{and} \quad |r| = 2n\log(3n)|x|^{c+1}}
+      $k := 2\log(3n)$ \\
       for $i$ = $0$ to $n-1$:
         \indpar{4}
         construct $x_i$ as $x$ with variable $v_i$ replaced by $0$ \\
@@ -332,7 +333,7 @@
     $T_\machine{B}$ is polynomial-time; which establishes that \machine{R} runs
     in polynomial-time.
 
-    As \machine{R} now has a false-negative rate $\leq \frac{n}{3^k} \leq
+    As \machine{R} now has a false-negative rate $\leq \frac{n}{e^{k/2}} \leq
     \frac{n}{3n} = \frac{1}{3}$; it establishes that
     $\namedlangset{SAT} \in \RP$; starting with the assumption that
     $\namedlangset{SAT} \in \BPP$. \\
