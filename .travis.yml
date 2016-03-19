@@ -8,6 +8,7 @@ addons:
     - pgf
     - latexmk
     - texlive
+    - texlive-science
     - texlive-latex-extra
 
 script:
