@@ -47,8 +47,9 @@
   \par\medskip
 }
 
-\newcommand {\ie}      {\textnormal{i.e. }}
-\newcommand {\todo}[1] {{\large \textbf{TODO: #1}}}
+\newcommand {\ie}       {\textnormal{i.e. }}
+\newcommand {\todo}[1]  {{\large \textbf{TODO: #1}}}
+\newcommand {\field}[2] {\ensuremath{\namedset{F}_{#1}^{#2}}}
 
 %%% Defaults for languages and machines
 \newcommand {\langL}          {\langset{L}}
@@ -358,7 +359,49 @@
         number of random bits $X_1, X_2, X_3 \ldots \in \{0,1\}$, each being an
         independent random variable with expectation $p$.
   %-----------------------------------------------------------------------------
+  \begin{proof}[Intuition]
+    Not all real numbers are computable \ldots\ $p$ is one of them.
+  \end{proof}
+  \begin{proof}
+    First, we show that any \textit{language} can be encoded as a real number. A
+    simple algorithm would be:
+    \begin{align*}
+      \machine{R}(\langL) &= 0. b_1 b_2 b_3 \ldots \\
+      \text{where } b_i &= 1 \text{ if } w_i \in \langL, 0 \text{ otherwise} \\
+      w_i &= i^{th} \text{ string in } \{0,1\}^*
+    \end{align*}
+    We observe the following properties of \machine{R}:
+    \begin{itemize}
+      \item $\machine{R}(\langL)$ is a valid real number represented in binary.
+      \item $\machine{R}(\langL)$ has infinite digits (since $\{0,1\}^*$ is an
+            infinite set).
+      \item And \machine{R} is always unambiguously \textit{exists} all
+            $\langL \subseteq \{0,1\}^*$.
+      \item By the bit-wise construction of $\machine{R}(\langL)$, it is clear
+            that $\forall \langL \subseteq \{0,1\}^* :
+            0 \leq \machine{R}(\langL) \leq 1$
+    \end{itemize}
 
+    Now let's try to define $\machine{R}(\namedlangset{Halt})$.
+    \begin{align*}
+      \machine{R}(\namedlangset{Halt}) &= 0. b_1 b_2 b_3 \ldots \\
+      \text{where } b_i &= 1 \text{ if } \machineM_{\alpha_i}
+        \text{ halts on } x_i, 0 \text{ otherwise} \\
+      \langle \alpha_i, x_i \rangle &= i^{th} \text{ string in } \{0,1\}^*
+        \text{ decoded to a tuple}
+    \end{align*}
+    As argued above, $\machine{R}(\namedlangset{Halt})$ is well-defined.
+
+    We show that if a randomized TM is given access to a coin with bias
+    $\machine{R}(\namedlangset{Halt})$ is known; then it can decide
+    \namedlangset{Halt} in polynomial-time. \\
+    Consider the following randomized Turing machine:
+    $\machine{R}(\namedlangset{Halt})$:
+    \begin{turing}{$\machine{RM}_\namedlangset{Halt}$}
+                  {\langle \alpha, x \rangle}
+      ...
+    \end{turing}
+  \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Q5
@@ -492,7 +535,7 @@
     Now we prove the following theorem for increasing soundness of \IP\ systems
     to $1$.
     \begin{theorem}
-      If a language $\langL \in \IP$ with a soundness of $1$; then
+      If $\langL \in \IP$ has a proof system with a soundness of $1$; then
       $\langL \in \NP$.
     \end{theorem}
     \begin{proof}
@@ -515,6 +558,10 @@
       such a certificate would exist as argued. The verifier thus behaves as a
       verifier in \NP\ now!
     \end{proof}
+
+    Thus we have shown that, increasing the completeness parameter of \IP\ to
+    $1$ does not change the complexity class. But increasing the soundness
+    parameter to $1$ reduces its power, down to \NP.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -523,6 +570,52 @@
         the original codeword, if the received transmission is corrupted in
         $25\%$ or more of the coordinates.
   %-----------------------------------------------------------------------------
+  \begin{proof}[Intuition]
+    Error correction essentially finds the \textit{closest} valid Hadamard code,
+    for a corrupted code. We need to find a limit on this, beyond which the
+    \textit{closest} cannot be uniquely defined.
+  \end{proof}
+  \begin{proof}
+    Let's assume that for any $2$ strings of length $n$, their Hadamard codes
+    have a distance of at least $\Delta^n_{min}$:
+    $$
+    \forall C_i, C_j \in \field{2}{n} : \Delta(C_i, C_j) \geq \Delta^n_{min}
+    \qquad \text{if } C_i, C_j \text{ valid Hadamard codewords}
+    $$
+    Let's name $C_x$ and $C_y$ as the codewords which are separated by this
+    minimum distance.
+
+    Now, let's say we allow corruption of $k \geq \frac{1}{2}\Delta^n_{min}$
+    coordinates. \\
+    Then a corrupted codeword $C'_x$ would be within distance $k$ of not only
+    $C_x$, but also $C_y$ i.e.
+    $$
+    \Delta(C'_x, C_x) = k \wedge \Delta(C'_x, C_y) \leq k
+    $$
+    At this point, it would be impossible for any algorithm to predict if $C'_x$
+    was formed by correction of $C_x$ or $C_y$.
+
+    Thus, it's clear that we can only correct corruption of
+    $< \frac{1}{2}\Delta^n_{min}$ coordinates. \\
+
+    \begin{claim}
+      For Hadamard codes, $\Delta^n_{min} = 2^{n-1}$
+    \end{claim}
+    \begin{proof}
+      Consider $2$ Hadamard codewords $C_x$, $C_y$. If they agree at index $u$:
+      \begin{alignat*}{2}
+          & \quad C_x(u) - C_y(u) &= 0 \\
+        \Rightarrow & \quad \langle x, u \rangle - \langle y, u \rangle &= 0 \\
+        \Rightarrow & \quad \langle x - y, u \rangle &= 0
+      \end{alignat*}
+      For arbitrary $C_x$ and $C_y$, this would hold for half the indices. \\
+      Since the length of the codewords is $2^n$, half the number of indices is
+      $2^{n-1}$.
+    \end{proof}
+
+    Therefore, we can only correct at most $25\%$, or $\frac{2^{n}}{4}$ bits
+    corruption of Hadamard codewords of length $2^{n}$.
+  \end{proof}
 
 \end{enumerate}
 
