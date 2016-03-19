@@ -370,6 +370,9 @@
       \text{where } b_i &= 1 \text{ if } w_i \in \langL, 0 \text{ otherwise} \\
       w_i &= i^{th} \text{ string in } \{0,1\}^*
     \end{align*}
+    Note that the $i^{th}$ string here indicates that, all the strings in
+    $\{0,1\}^*$ are ordered by increasing value when interpreted as integers.
+
     We observe the following properties of \machine{R}:
     \begin{itemize}
       \item $\machine{R}(\langL)$ is a valid real number represented in binary.
@@ -394,13 +397,29 @@
 
     We show that if a randomized TM is given access to a coin with bias
     $\machine{R}(\namedlangset{Halt})$ is known; then it can decide
-    \namedlangset{Halt} in polynomial-time. \\
+    \namedlangset{Halt} in polynomial-time. The TM just needs to know the
+    $i^{th}$ digit of $\machine{R}(\namedlangset{Halt})$. \\
     Consider the following randomized Turing machine:
     $\machine{R}(\namedlangset{Halt})$:
     \begin{turing}{$\machine{RM}_\namedlangset{Halt}$}
                   {\langle \alpha, x \rangle}
-      ...
+      compute the index $i$ of the string $w_i = \langle \alpha, x \rangle$ in
+        $\{0,1\}^*$ \\
+      extract the $i^{th}$ bit of $\machine{R}(\namedlangset{Halt})$ by repeated
+        flips of the available coin \\
+      return $b_i$
     \end{turing}
+    Computing the index $i$ can be easily done in polynomial time -- simply
+    evaluating the binary string $\langle \alpha, x \rangle$ to an integer.
+
+    Extracting the $i^{th}$ bit of $\machine{R}(\namedlangset{Halt})$ can also
+    be achieved in polynomial-time --- we use Chernoff bound to approximate the
+    value of $\machine{R}(\namedlangset{Halt})$ to arbitrary precision $\delta$,
+    by multiple tosses of the coin. \\
+    (Due to lack of time, I could not formalise this part.)
+
+    Thus, given a coin with bias $\machine{R}(\namedlangset{Halt})$,
+    we can decide \namedlangset{Halt}, in polynomial-time.
   \end{proof}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
